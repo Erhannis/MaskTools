@@ -198,7 +198,7 @@ module centerPleat() {
   HINGE_B_L = 40; //TODO ???
   
   translate([0,70,0])
-  union() { // Rack A
+  union() { // Rack A - print 2
     linear_extrude(height=RACK_SZ) {
       for (ps = [
           [[0,-HOOK_OUT],[-PIER_A_SX,-HOOK_OUT]],
@@ -223,7 +223,7 @@ module centerPleat() {
   }
   
   translate([0,50,0])
-  union() { // Rack B
+  union() { // Rack B - print 2
     linear_extrude(height=RACK_SZ) {
       for (ps = [
           // Stem
@@ -292,7 +292,7 @@ module centerPleat() {
   }
 
   translate([0,-40,0]) cmirror([0,1,0]) translate([0,5,0])
-  union() { // Pier bridge
+  union() { // Pier bridge - print 2
     linear_extrude(height=BRIDGE_SX) { // Bridge
       channel(from=[-BRIDGE_SY*3/2,0],to=[-BRIDGE_LENGTH+BRIDGE_SY*3/2,0],d=BRIDGE_SY,cap="sharp");
     }
@@ -304,9 +304,9 @@ module centerPleat() {
   }
 }
 
-union() { // Ruler spacer
+*union() { // Ruler spacer
   RULER_WIDTH = 1*INCH;
-  RULER_T = TEMPLATE_SZ/2;
+  RULER_T = TEMPLATE_SZ;
   TRIANGLE_SIZE = RULER_WIDTH*2;
   cube([SX,RULER_WIDTH, RULER_T],center=true);
   cmirror([1,0,0]) translate([-SX/2,0,0]) {
@@ -316,4 +316,72 @@ union() { // Ruler spacer
       cmirror([0,1,0]) translate([0,RULER_WIDTH,0]) translate([0,-RULER_T/2,0]) cube(RULER_T);
     }
   }
+}
+
+union() { // Cutting rig - like, uh, wrap cloth around it and cut all sheets at once
+  BRACE_SZ = 20;
+  BRACE_T = 5; //TODO We *might*, be able to reduce this, but these are all kinda load bearing....
+  BRIDGE_SX = 20;
+  SM_BRIDGE_SY = BRACE_T;
+  BIG_BRIDGE_SY = SM_BRIDGE_SY*2;
+  STOPPER_T = SM_BRIDGE_SY;
+  BRIDGE_LENGTH = SX+0*INCH + STOPPER_T*2 + BRACE_SZ*2;
+  CUTTING_GAP = 2;
+  
+  ADJUSTED_SPAN = SX-BIG_BRIDGE_SY-2*SM_BRIDGE_SY-CUTTING_GAP;
+
+  //translate([0,70,0])
+  union() { // Edge brace
+    linear_extrude(height=BRACE_SZ) {
+      for (ps = [
+          // Big bridge
+          [[0,0],[0,BIG_BRIDGE_SY/2+BRACE_T/2]],
+          [[0,BIG_BRIDGE_SY/2+BRACE_T/2],[BRIDGE_SX+BRACE_T,BIG_BRIDGE_SY/2+BRACE_T/2]],
+          [[BRIDGE_SX+BRACE_T,BIG_BRIDGE_SY/2+BRACE_T/2],[BRIDGE_SX+BRACE_T,-BIG_BRIDGE_SY/2-BRACE_T/2]],
+          [[BRIDGE_SX+BRACE_T,-BIG_BRIDGE_SY/2-BRACE_T/2],[0,-BIG_BRIDGE_SY/2-BRACE_T/2]],
+          [[0,-BIG_BRIDGE_SY/2-BRACE_T/2],[0,0]],
+      
+          // Stem
+          [[BRIDGE_SX+BRACE_T,0],[BRACE_T/2+ADJUSTED_SPAN-BRIDGE_SX-BRACE_T/2,0]],
+
+          // Cutting bridges
+          [[BRACE_T/2+ADJUSTED_SPAN-BRIDGE_SX-BRACE_T/2,0],[BRACE_T/2+ADJUSTED_SPAN-BRIDGE_SX-BRACE_T/2,CUTTING_GAP/2+SM_BRIDGE_SY+BRACE_T/2]],
+          [[BRACE_T/2+ADJUSTED_SPAN-BRIDGE_SX-BRACE_T/2,CUTTING_GAP/2+SM_BRIDGE_SY+BRACE_T/2],[BRACE_T/2+ADJUSTED_SPAN-BRIDGE_SX-BRACE_T/2+BRIDGE_SX+BRACE_T,CUTTING_GAP/2+SM_BRIDGE_SY+BRACE_T/2]],
+          [[BRACE_T/2+ADJUSTED_SPAN-BRIDGE_SX-BRACE_T/2+BRIDGE_SX+BRACE_T,CUTTING_GAP/2+SM_BRIDGE_SY+BRACE_T/2],[BRACE_T/2+ADJUSTED_SPAN-BRIDGE_SX-BRACE_T/2+BRIDGE_SX+BRACE_T,-CUTTING_GAP/2-SM_BRIDGE_SY-BRACE_T/2]],
+          [[BRACE_T/2+ADJUSTED_SPAN-BRIDGE_SX-BRACE_T/2+BRIDGE_SX+BRACE_T,-CUTTING_GAP/2-SM_BRIDGE_SY-BRACE_T/2],[BRACE_T/2+ADJUSTED_SPAN-BRIDGE_SX-BRACE_T/2,-CUTTING_GAP/2-SM_BRIDGE_SY-BRACE_T/2]],
+          [[BRACE_T/2+ADJUSTED_SPAN-BRIDGE_SX-BRACE_T/2,-CUTTING_GAP/2-SM_BRIDGE_SY-BRACE_T/2],[BRACE_T/2+ADJUSTED_SPAN-BRIDGE_SX-BRACE_T/2,0]],
+        ]) {
+        channel(from=ps[0],to=ps[1],d=BRACE_T,cap="square");
+      }
+      channel(from=[BRACE_T/2+ADJUSTED_SPAN-BRIDGE_SX-BRACE_T/2,0],to=[BRACE_T/2+ADJUSTED_SPAN-BRIDGE_SX-BRACE_T/2+BRIDGE_SX+BRACE_T,0],d=CUTTING_GAP,cap="none");
+    }
+  }
+  //translate([BRACE_T/2,-20,0]) cube([ADJUSTED_SPAN,3,10]);
+  //translate([BRACE_T/2,-15,0]) cube([BRIDGE_SX,3,10]);
+
+  //translate([0,-40,0]) cmirror([0,1,0]) translate([0,5,0])
+  *union() { // Big bridge
+    linear_extrude(height=BRIDGE_SX) { // Bridge
+      channel(from=[0,0],to=[-BRIDGE_LENGTH,0],d=BIG_BRIDGE_SY,cap="triangle"); // I'd prefer "sharp", but that makes it juuust too long for my printer
+    }
+    linear_extrude(height=BRIDGE_SX+BRACE_T) { // Stopper
+      channel(from=[-BRACE_SZ-STOPPER_T/2,-BIG_BRIDGE_SY/2-BRACE_T],to=[-BRACE_SZ-STOPPER_T/2,BIG_BRIDGE_SY/2+BRACE_T],d=STOPPER_T,cap="none");
+      channel(from=[-BRIDGE_LENGTH+BRACE_SZ+STOPPER_T/2,-BIG_BRIDGE_SY/2-BRACE_T],to=[-BRIDGE_LENGTH+BRACE_SZ+STOPPER_T/2,BIG_BRIDGE_SY/2+BRACE_T],d=STOPPER_T,cap="none");
+    }
+  }
+  //translate([-STOPPER_T-BRACE_SZ,-20,0]) mirror([1,0,0]) cube([10*INCH,3,10]);
+
+  //translate([0,-40,0]) cmirror([0,1,0]) translate([0,5,0])
+  *union() { // Cutting bridge - print 2
+    linear_extrude(height=BRIDGE_SX) { // Bridge
+      channel(from=[0,0],to=[-BRIDGE_LENGTH,0],d=SM_BRIDGE_SY,cap="triangle"); // I'd prefer "sharp", but that makes it juuust too long for my printer
+    }
+    linear_extrude(height=BRIDGE_SX+BRACE_T) { // Stopper
+      channel(from=[-BRACE_SZ-STOPPER_T/2,-SM_BRIDGE_SY/2],to=[-BRACE_SZ-STOPPER_T/2,SM_BRIDGE_SY/2+BRACE_T],d=STOPPER_T,cap="none");
+      channel(from=[-BRIDGE_LENGTH+BRACE_SZ+STOPPER_T/2,-SM_BRIDGE_SY/2],to=[-BRIDGE_LENGTH+BRACE_SZ+STOPPER_T/2,SM_BRIDGE_SY/2+BRACE_T],d=STOPPER_T,cap="none");
+    }
+  }
+}
+
+*union() { // Blade aligners
 }
