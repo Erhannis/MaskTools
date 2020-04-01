@@ -157,7 +157,7 @@ module centerPleat() {
   }
 }
 
-*union() { // Pleat rack
+union() { // Pleat rack
   RACK_SZ = 20;
   RACK_T = 1.5;
   HOOK_L = PLEAT_SY; //TODO Correct?
@@ -197,7 +197,7 @@ module centerPleat() {
   HINGE_A_L = 40; //TODO ???
   HINGE_B_L = 40; //TODO ???
   
-  translate([0,70,0])
+  translate([0,70,0]) ctranslate([0,8,0])
   union() { // Rack A - print 2
     linear_extrude(height=RACK_SZ) {
       for (ps = [
@@ -222,7 +222,7 @@ module centerPleat() {
     }
   }
   
-  translate([0,50,0])
+  translate([0,50,0]) ctranslate([0,8,0])
   union() { // Rack B - print 2
     linear_extrude(height=RACK_SZ) {
       for (ps = [
@@ -318,7 +318,7 @@ module centerPleat() {
   }
 }
 
-union() { // Cutting rig - like, uh, wrap cloth around it and cut all sheets at once
+*union() { // Cutting rig - like, uh, wrap cloth around it and cut all sheets at once
   BRACE_SZ = 20;
   BRACE_T = 5; //TODO We *might*, be able to reduce this, but these are all kinda load bearing....
   BRIDGE_SX = 20;
@@ -330,7 +330,7 @@ union() { // Cutting rig - like, uh, wrap cloth around it and cut all sheets at 
   
   ADJUSTED_SPAN = SX-BIG_BRIDGE_SY-2*SM_BRIDGE_SY-CUTTING_GAP;
 
-  //translate([0,70,0])
+  translate([0,45,0]) cmirror([0,1,0]) translate([0,15,0])
   union() { // Edge brace
     linear_extrude(height=BRACE_SZ) {
       for (ps = [
@@ -359,8 +359,8 @@ union() { // Cutting rig - like, uh, wrap cloth around it and cut all sheets at 
   //translate([BRACE_T/2,-20,0]) cube([ADJUSTED_SPAN,3,10]);
   //translate([BRACE_T/2,-15,0]) cube([BRIDGE_SX,3,10]);
 
-  //translate([0,-40,0]) cmirror([0,1,0]) translate([0,5,0])
-  *union() { // Big bridge
+  translate([BRIDGE_LENGTH,0,0]) translate([0,5,0])
+  union() { // Big bridge
     linear_extrude(height=BRIDGE_SX) { // Bridge
       channel(from=[0,0],to=[-BRIDGE_LENGTH,0],d=BIG_BRIDGE_SY,cap="triangle"); // I'd prefer "sharp", but that makes it juuust too long for my printer
     }
@@ -371,8 +371,8 @@ union() { // Cutting rig - like, uh, wrap cloth around it and cut all sheets at 
   }
   //translate([-STOPPER_T-BRACE_SZ,-20,0]) mirror([1,0,0]) cube([10*INCH,3,10]);
 
-  //translate([0,-40,0]) cmirror([0,1,0]) translate([0,5,0])
-  *union() { // Cutting bridge - print 2
+  translate([BRIDGE_LENGTH,-20,0]) cmirror([0,1,0]) translate([0,5,0])
+  union() { // Cutting bridge - print 2
     linear_extrude(height=BRIDGE_SX) { // Bridge
       channel(from=[0,0],to=[-BRIDGE_LENGTH,0],d=SM_BRIDGE_SY,cap="triangle"); // I'd prefer "sharp", but that makes it juuust too long for my printer
     }
