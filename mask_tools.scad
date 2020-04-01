@@ -20,7 +20,7 @@ SX = 9*INCH;
 SY = 6*INCH;
 STEP_SZ = 2;
 STEP_SZ_BIG = STEP_SZ*1.5;
-PLEAT_SY = 0.25*INCH;
+PLEAT_SY = 0.5*INCH;
 MIDDLE_SY = 1.75*INCH;
 LIP = 3;
 PLEAT_STEPS_INSET = 0.5*INCH; // Like, how much fabric should hang off the ends
@@ -163,12 +163,10 @@ union() { // Pleat rack
   HOOK_L = PLEAT_SY; //TODO Correct?
   HOOK_INTERVAL = 2*INCH;
   
-  CLOTH_SPACE = 1;
+  CLOTH_SPACE = 2;
   HOOK_GAP = RACK_T + CLOTH_SPACE;
   HOOK_OUT = HOOK_GAP + RACK_T;
   
-  STICK_OUTY_BIT_A_LENGTH = HOOK_L;
-
   *translate([-20,0,0]) union() { // Hook test
     linear_extrude(height=RACK_SZ) {
       for (ps = [
@@ -184,9 +182,9 @@ union() { // Pleat rack
   BRIDGE_SY = HOOK_GAP;
   BRIDGE_SX = 20;
   
-  BRIDGE_LENGTH = 7.5*INCH;
+  BRIDGE_LENGTH = 6.5*INCH;
   
-  PIER_A_SX = 2*INCH; //TODO ?
+  PIER_A_SX = HOOK_L+BRIDGE_SX+RACK_T;
   PIER_B_SX = PIER_A_SX-HOOK_L+RACK_T+CLOTH_SPACE/2;
   
   HANDLE_A_SX = 40; //TODO ???
@@ -197,7 +195,11 @@ union() { // Pleat rack
   HINGE_A_L = 40; //TODO ???
   HINGE_B_L = 40; //TODO ???
   
-  translate([0,70,0]) ctranslate([0,8,0])
+  IDLE_SLOT_T = (BRIDGE_SY+2*RACK_T)*1.2;
+  IDLE_SLOT_DOWNSET = 5;
+  IDLE_SLOT_DEPTH = BRIDGE_SX*0.6;
+  
+  translate([0,76,0]) ctranslate([0,10,0])
   union() { // Rack A - print 2
     linear_extrude(height=RACK_SZ) {
       for (ps = [
@@ -222,7 +224,7 @@ union() { // Pleat rack
     }
   }
   
-  translate([0,50,0]) ctranslate([0,8,0])
+  translate([0,52,0]) ctranslate([0,10,0])
   union() { // Rack B - print 2
     linear_extrude(height=RACK_SZ) {
       for (ps = [
@@ -272,23 +274,26 @@ union() { // Pleat rack
     }
   }
 
-  union() { // Bridge B
-    linear_extrude(height=BRIDGE_SX) { // Bridge
-      channel(from=[-BRIDGE_SY*3/2,0],to=[-BRIDGE_LENGTH+BRIDGE_SY*3/2,0],d=BRIDGE_SY,cap="sharp");
+  difference() { // Bridge B
+    union() {
+      linear_extrude(height=BRIDGE_SX) { // Bridge
+        channel(from=[-BRIDGE_SY*3/2,0],to=[-BRIDGE_LENGTH+BRIDGE_SY*3/2,0],d=BRIDGE_SY,cap="sharp");
+      }
+      linear_extrude(height=BRIDGE_SX+RACK_T) { // Stopper
+        STOPPER_T = BRIDGE_SY;
+        channel(from=[-RACK_SZ-STOPPER_T/2,-BRIDGE_SY/2-RACK_T],to=[-RACK_SZ-STOPPER_T/2,BRIDGE_SY/2+RACK_T],d=STOPPER_T,cap="none");
+        channel(from=[-BRIDGE_LENGTH+RACK_SZ+STOPPER_T/2,-BRIDGE_SY/2-RACK_T],to=[-BRIDGE_LENGTH+RACK_SZ+STOPPER_T/2,BRIDGE_SY/2+RACK_T],d=STOPPER_T,cap="none");
+      }
+      translate([-BRIDGE_LENGTH/2,0,0]) cmirror([1,0,0]) translate([BRIDGE_LENGTH/2,0,0]) translate([0,BRIDGE_SY/2,0])
+       linear_extrude(height=BRIDGE_SX) { // Hinge socket
+        channel(from=[-RACK_SZ-HINGE_T/2,0],to=[-RACK_SZ-HINGE_T/2,HINGE_B_L/2],d=HINGE_T,cap="none");
+        channel(from=[-RACK_SZ-HINGE_T/2,HINGE_B_L/2],to=[-RACK_SZ-HINGE_T/2,HINGE_B_L],d=HINGE_T,cap="sharp");
+         
+        channel(from=[-RACK_SZ-HINGE_T/2-HINGE_T*2-HINGE_SLOP,0],to=[-RACK_SZ-HINGE_T/2-HINGE_T*2-HINGE_SLOP,HINGE_B_L/2],d=HINGE_T,cap="none");
+        channel(from=[-RACK_SZ-HINGE_T/2-HINGE_T*2-HINGE_SLOP,HINGE_B_L/2],to=[-RACK_SZ-HINGE_T/2-HINGE_T*2-HINGE_SLOP,HINGE_B_L],d=HINGE_T,cap="sharp");
+      }
     }
-    linear_extrude(height=BRIDGE_SX+RACK_T) { // Stopper
-      STOPPER_T = BRIDGE_SY;
-      channel(from=[-RACK_SZ-STOPPER_T/2,-BRIDGE_SY/2-RACK_T],to=[-RACK_SZ-STOPPER_T/2,BRIDGE_SY/2+RACK_T],d=STOPPER_T,cap="none");
-      channel(from=[-BRIDGE_LENGTH+RACK_SZ+STOPPER_T/2,-BRIDGE_SY/2-RACK_T],to=[-BRIDGE_LENGTH+RACK_SZ+STOPPER_T/2,BRIDGE_SY/2+RACK_T],d=STOPPER_T,cap="none");
-    }
-    translate([-BRIDGE_LENGTH/2,0,0]) cmirror([1,0,0]) translate([BRIDGE_LENGTH/2,0,0]) translate([0,BRIDGE_SY/2,0])
-     linear_extrude(height=BRIDGE_SX) { // Hinge socket
-      channel(from=[-RACK_SZ-HINGE_T/2,0],to=[-RACK_SZ-HINGE_T/2,HINGE_B_L/2],d=HINGE_T,cap="none");
-      channel(from=[-RACK_SZ-HINGE_T/2,HINGE_B_L/2],to=[-RACK_SZ-HINGE_T/2,HINGE_B_L],d=HINGE_T,cap="sharp");
-       
-      channel(from=[-RACK_SZ-HINGE_T/2-HINGE_T*2-HINGE_SLOP,0],to=[-RACK_SZ-HINGE_T/2-HINGE_T*2-HINGE_SLOP,HINGE_B_L/2],d=HINGE_T,cap="none");
-      channel(from=[-RACK_SZ-HINGE_T/2-HINGE_T*2-HINGE_SLOP,HINGE_B_L/2],to=[-RACK_SZ-HINGE_T/2-HINGE_T*2-HINGE_SLOP,HINGE_B_L],d=HINGE_T,cap="sharp");
-    }
+    translate([0,HINGE_B_L-IDLE_SLOT_DOWNSET,BRIDGE_SX]) rotate([-30,0,0]) translate([0,0,-IDLE_SLOT_DEPTH]) translate([0,0,BIG/2]) cube([BIG,IDLE_SLOT_T,BIG],center=true);
   }
 
   translate([0,-40,0]) cmirror([0,1,0]) translate([0,5,0])
