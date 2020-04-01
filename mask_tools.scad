@@ -157,7 +157,7 @@ module centerPleat() {
   }
 }
 
-union() { // Pleat rack
+*union() { // Pleat rack
   RACK_SZ = 20;
   RACK_T = 1.5;
   HOOK_L = PLEAT_SY; //TODO Correct?
@@ -304,11 +304,16 @@ union() { // Pleat rack
   }
 }
 
-*union() { // Ruler spacer
+union() { // Ruler spacer
   RULER_WIDTH = 1*INCH;
   RULER_T = TEMPLATE_SZ/2;
+  TRIANGLE_SIZE = RULER_WIDTH*2;
   cube([SX,RULER_WIDTH, RULER_T],center=true);
-  cmirror([1,0,0]) translate([-SX/2,0,RULER_T/2]) {
-    halfPyramid(RULER_T);
+  cmirror([1,0,0]) translate([-SX/2,0,0]) {
+    linear_extrude(height=RULER_T, center=true) triangle(TRIANGLE_SIZE, dir=[1,0]);
+    translate([0,0,RULER_T/2]) {
+      cmirror([0,1,0]) translate([0,RULER_WIDTH,0]) halfPyramid(RULER_T);
+      halfPyramid(RULER_T*2);
+    }
   }
 }
