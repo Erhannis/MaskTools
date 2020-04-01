@@ -312,8 +312,8 @@ union() { // Ruler spacer
   cmirror([1,0,0]) translate([-SX/2,0,0]) {
     linear_extrude(height=RULER_T, center=true) triangle(TRIANGLE_SIZE, dir=[1,0]);
     translate([0,0,RULER_T/2]) {
-      cmirror([0,1,0]) translate([0,RULER_WIDTH,0]) halfPyramid(RULER_T);
-      halfPyramid(RULER_T*2);
+      translate([0,-RULER_T*2/2,0]) cube(RULER_T*2);
+      cmirror([0,1,0]) translate([0,RULER_WIDTH,0]) translate([0,-RULER_T/2,0]) cube(RULER_T);
     }
   }
 }
