@@ -1,6 +1,9 @@
 /**
 Tools to help make emergency masks out of fabric.
 Templates, forms, etc.
+
+To print different things, basically just solo different elements.  (Put a "!" in front
+of the element in question.)  Not super well organized, sorry.
 */
 
 use <deps.link/erhannisScad/misc.scad>
@@ -11,8 +14,10 @@ BIG = 1000;
 
 INCH = 25.4;
 
-SX = 3*INCH;//9*INCH;
-SY = 2*INCH;//6*INCH;
+//SX = 3*INCH;
+//SY = 2*INCH;
+SX = 9*INCH;
+SY = 6*INCH;
 STEP_SZ = 2;
 STEP_SZ_BIG = STEP_SZ*1.5;
 PLEAT_SY = 0.25*INCH;
@@ -204,13 +209,13 @@ union() { // Pleat rack
       
           // Base bridge
           [[-PIER_A_SX-HOOK_INTERVAL-HANDLE_A_SX,0],[-PIER_A_SX-HOOK_INTERVAL-HANDLE_A_SX,BRIDGE_SY+RACK_T]],
-          [[-PIER_A_SX-HOOK_INTERVAL-HANDLE_A_SX,BRIDGE_SY+RACK_T],[-PIER_A_SX-HOOK_INTERVAL-HANDLE_A_SX+BRIDGE_SX,BRIDGE_SY+RACK_T]],
-          [[-PIER_A_SX-HOOK_INTERVAL-HANDLE_A_SX+BRIDGE_SX,BRIDGE_SY+RACK_T],[-PIER_A_SX-HOOK_INTERVAL-HANDLE_A_SX+BRIDGE_SX,0]],
+          [[-PIER_A_SX-HOOK_INTERVAL-HANDLE_A_SX,BRIDGE_SY+RACK_T],[-PIER_A_SX-HOOK_INTERVAL-HANDLE_A_SX+BRIDGE_SX+RACK_T,BRIDGE_SY+RACK_T]],
+          [[-PIER_A_SX-HOOK_INTERVAL-HANDLE_A_SX+BRIDGE_SX+RACK_T,BRIDGE_SY+RACK_T],[-PIER_A_SX-HOOK_INTERVAL-HANDLE_A_SX+BRIDGE_SX+RACK_T,0]],
       
           // Pier bridge
           [[-PIER_A_SX+HOOK_L,-HOOK_OUT],[-PIER_A_SX+HOOK_L,-HOOK_OUT+BRIDGE_SY+RACK_T]],
-          [[-PIER_A_SX+HOOK_L,-HOOK_OUT+BRIDGE_SY+RACK_T],[-PIER_A_SX+HOOK_L+BRIDGE_SX,-HOOK_OUT+BRIDGE_SY+RACK_T]],
-          [[-PIER_A_SX+HOOK_L+BRIDGE_SX,-HOOK_OUT+BRIDGE_SY+RACK_T],[-PIER_A_SX+HOOK_L+BRIDGE_SX,-HOOK_OUT]],
+          [[-PIER_A_SX+HOOK_L,-HOOK_OUT+BRIDGE_SY+RACK_T],[-PIER_A_SX+HOOK_L+BRIDGE_SX+RACK_T,-HOOK_OUT+BRIDGE_SY+RACK_T]],
+          [[-PIER_A_SX+HOOK_L+BRIDGE_SX+RACK_T,-HOOK_OUT+BRIDGE_SY+RACK_T],[-PIER_A_SX+HOOK_L+BRIDGE_SX+RACK_T,-HOOK_OUT]],
         ]) {
         channel(from=ps[0],to=ps[1],d=RACK_T,cap="square");
       }
@@ -234,13 +239,13 @@ union() { // Pleat rack
       
           // Base bridge
           [[-PIER_B_SX-HOOK_INTERVAL-HANDLE_B_SX,0],[-PIER_B_SX-HOOK_INTERVAL-HANDLE_B_SX,BRIDGE_SY+RACK_T]],
-          [[-PIER_B_SX-HOOK_INTERVAL-HANDLE_B_SX,BRIDGE_SY+RACK_T],[-PIER_B_SX-HOOK_INTERVAL-HANDLE_B_SX+BRIDGE_SX,BRIDGE_SY+RACK_T]],
-          [[-PIER_B_SX-HOOK_INTERVAL-HANDLE_B_SX+BRIDGE_SX,BRIDGE_SY+RACK_T],[-PIER_B_SX-HOOK_INTERVAL-HANDLE_B_SX+BRIDGE_SX,0]],
+          [[-PIER_B_SX-HOOK_INTERVAL-HANDLE_B_SX,BRIDGE_SY+RACK_T],[-PIER_B_SX-HOOK_INTERVAL-HANDLE_B_SX+BRIDGE_SX+RACK_T,BRIDGE_SY+RACK_T]],
+          [[-PIER_B_SX-HOOK_INTERVAL-HANDLE_B_SX+BRIDGE_SX+RACK_T,BRIDGE_SY+RACK_T],[-PIER_B_SX-HOOK_INTERVAL-HANDLE_B_SX+BRIDGE_SX+RACK_T,0]],
 
           // Pier bridge
           [[-PIER_B_SX-HOOK_L,0],[-PIER_B_SX-HOOK_L,BRIDGE_SY+RACK_T]],
-          [[-PIER_B_SX-HOOK_L,BRIDGE_SY+RACK_T],[-PIER_B_SX-HOOK_L-BRIDGE_SX,BRIDGE_SY+RACK_T]],
-          [[-PIER_B_SX-HOOK_L-BRIDGE_SX,BRIDGE_SY+RACK_T],[-PIER_B_SX-HOOK_L-BRIDGE_SX,0]],
+          [[-PIER_B_SX-HOOK_L,BRIDGE_SY+RACK_T],[-PIER_B_SX-HOOK_L-BRIDGE_SX-RACK_T,BRIDGE_SY+RACK_T]],
+          [[-PIER_B_SX-HOOK_L-BRIDGE_SX-RACK_T,BRIDGE_SY+RACK_T],[-PIER_B_SX-HOOK_L-BRIDGE_SX-RACK_T,0]],
         ]) {
         channel(from=ps[0],to=ps[1],d=RACK_T,cap="square");
       }
@@ -296,5 +301,14 @@ union() { // Pleat rack
       channel(from=[-RACK_SZ-STOPPER_T/2,-BRIDGE_SY/2-RACK_T],to=[-RACK_SZ-STOPPER_T/2,BRIDGE_SY/2+RACK_T],d=STOPPER_T,cap="none");
       channel(from=[-BRIDGE_LENGTH+RACK_SZ+STOPPER_T/2,-BRIDGE_SY/2-RACK_T],to=[-BRIDGE_LENGTH+RACK_SZ+STOPPER_T/2,BRIDGE_SY/2+RACK_T],d=STOPPER_T,cap="none");
     }
+  }
+}
+
+*union() { // Ruler spacer
+  RULER_WIDTH = 1*INCH;
+  RULER_T = TEMPLATE_SZ/2;
+  cube([SX,RULER_WIDTH, RULER_T],center=true);
+  cmirror([1,0,0]) translate([-SX/2,0,RULER_T/2]) {
+    halfPyramid(RULER_T);
   }
 }
