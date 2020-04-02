@@ -161,7 +161,8 @@ union() { // Pleat rack
   RACK_SZ = 20;
   RACK_T = 1.5;
   HOOK_L = PLEAT_SY; //TODO Correct?
-  HOOK_INTERVAL = 2*INCH;
+  HOOK_INTERVAL_ADJUSTMENT = 0;
+  HOOK_INTERVAL = 2.5*HOOK_L+HOOK_INTERVAL_ADJUSTMENT;
   
   CLOTH_SPACE = 2;
   HOOK_GAP = RACK_T + CLOTH_SPACE;
@@ -187,8 +188,8 @@ union() { // Pleat rack
   PIER_A_SX = HOOK_L+BRIDGE_SX+RACK_T;
   PIER_B_SX = PIER_A_SX-HOOK_L+RACK_T+CLOTH_SPACE/2;
   
-  HANDLE_A_SX = 40; //TODO ???
-  HANDLE_B_SX = 80; //TODO ???
+  HANDLE_A_SX = 54+(SY-6*INCH)/2-HOOK_INTERVAL_ADJUSTMENT/2;
+  HANDLE_B_SX = 89+(SY-6*INCH)/2-HOOK_INTERVAL_ADJUSTMENT/2;
 
   HINGE_SLOP = 1;
   HINGE_T = BRIDGE_SY;
@@ -224,8 +225,9 @@ union() { // Pleat rack
     }
   }
   
+  //TODO Marking at -(HOOK_L/2+PIER_B_SX+HOOK_INTERVAL/2)
   translate([0,52,0]) ctranslate([0,10,0])
-  union() { // Rack B - print 2
+  !translate([HOOK_L/2+PIER_B_SX+HOOK_INTERVAL/2,0,0]) union() { // Rack B - print 2
     linear_extrude(height=RACK_SZ) {
       for (ps = [
           // Stem
