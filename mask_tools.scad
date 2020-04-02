@@ -167,7 +167,7 @@ module centerPleat() {
   HOOK_GAP = RACK_T + CLOTH_SPACE;
   HOOK_OUT = HOOK_GAP + RACK_T;
   
-  *translate([-20,0,0]) union() { // Hook test
+  *translate([-80,7,0]) union() { // Hook test
     linear_extrude(height=RACK_SZ) {
       for (ps = [
           [[0,0],[0,HOOK_L*1.5*2]],
@@ -323,7 +323,7 @@ module centerPleat() {
   }
 }
 
-*union() { // Cutting rig - like, uh, wrap cloth around it and cut all sheets at once
+union() { // Cutting rig - like, uh, wrap cloth around it and cut all sheets at once
   BRACE_SZ = 20;
   BRACE_T = 5; //TODO We *might*, be able to reduce this, but these are all kinda load bearing....
   BRIDGE_SX = 20;
@@ -364,12 +364,12 @@ module centerPleat() {
   //translate([BRACE_T/2,-20,0]) cube([ADJUSTED_SPAN,3,10]);
   //translate([BRACE_T/2,-15,0]) cube([BRIDGE_SX,3,10]);
 
-  translate([BRIDGE_LENGTH,0,0]) translate([0,5,0])
+  translate([BRIDGE_LENGTH,0,0]) translate([0,5,0]) rotate([90,0,0])
   union() { // Big bridge
     linear_extrude(height=BRIDGE_SX) { // Bridge
       channel(from=[0,0],to=[-BRIDGE_LENGTH,0],d=BIG_BRIDGE_SY,cap="triangle"); // I'd prefer "sharp", but that makes it juuust too long for my printer
     }
-    linear_extrude(height=BRIDGE_SX+BRACE_T) { // Stopper
+    linear_extrude(height=BRIDGE_SX+BRACE_T*2) { // Stopper
       channel(from=[-BRACE_SZ-STOPPER_T/2,-BIG_BRIDGE_SY/2-BRACE_T],to=[-BRACE_SZ-STOPPER_T/2,BIG_BRIDGE_SY/2+BRACE_T],d=STOPPER_T,cap="none");
       channel(from=[-BRIDGE_LENGTH+BRACE_SZ+STOPPER_T/2,-BIG_BRIDGE_SY/2-BRACE_T],to=[-BRIDGE_LENGTH+BRACE_SZ+STOPPER_T/2,BIG_BRIDGE_SY/2+BRACE_T],d=STOPPER_T,cap="none");
     }
@@ -388,7 +388,7 @@ module centerPleat() {
   }
 }
 
-union() { // Blade aligners
+*union() { // Blade aligners
   // Note, these are a little hard to use, still.  You kinda need to keep the fabric tight, in
   // the direction of travel.  It may not be any easier than just cutting against the side of
   // the ruler or straightedge.  BUT it might still be useful for a corner you can't get an
