@@ -215,53 +215,62 @@ union() { // Pleat rack
   CENTER_MARKING_SIZE = 1;
   
   translate([0,76,0]) ctranslate([0,10,0])
-  union() { // Rack A - print 2
-    linear_extrude(height=RACK_SZ) {
-      for (ps = [
-          [[0,-HOOK_OUT],[-PIER_A_SX,-HOOK_OUT]],
-          [[-PIER_A_SX+HOOK_L,-HOOK_OUT],[-PIER_A_SX+HOOK_L,0]],
-          [[-PIER_A_SX+HOOK_L,0],[-PIER_A_SX-HOOK_INTERVAL-HANDLE_A_SX,0]],
-          [[-PIER_A_SX+HOOK_L-HOOK_INTERVAL,0],[-PIER_A_SX+HOOK_L-HOOK_INTERVAL,-HOOK_OUT]],
-          [[-PIER_A_SX+HOOK_L-HOOK_INTERVAL,-HOOK_OUT],[-PIER_A_SX-HOOK_INTERVAL,-HOOK_OUT]],
-      
-          // Base bridge
-          [[-PIER_A_SX-HOOK_INTERVAL-HANDLE_A_SX,0],[-PIER_A_SX-HOOK_INTERVAL-HANDLE_A_SX,BRIDGE_SY+RACK_T]],
-          [[-PIER_A_SX-HOOK_INTERVAL-HANDLE_A_SX,BRIDGE_SY+RACK_T],[-PIER_A_SX-HOOK_INTERVAL-HANDLE_A_SX+BRIDGE_SX+RACK_T,BRIDGE_SY+RACK_T]],
-          [[-PIER_A_SX-HOOK_INTERVAL-HANDLE_A_SX+BRIDGE_SX+RACK_T,BRIDGE_SY+RACK_T],[-PIER_A_SX-HOOK_INTERVAL-HANDLE_A_SX+BRIDGE_SX+RACK_T,0]],
-      
-          // Pier bridge
-          [[-PIER_A_SX+HOOK_L,-HOOK_OUT],[-PIER_A_SX+HOOK_L,-HOOK_OUT+BRIDGE_SY+RACK_T]],
-          [[-PIER_A_SX+HOOK_L,-HOOK_OUT+BRIDGE_SY+RACK_T],[-PIER_A_SX+HOOK_L+PIER_BRIDGE_SX+RACK_T,-HOOK_OUT+BRIDGE_SY+RACK_T]],
-          [[-PIER_A_SX+HOOK_L+PIER_BRIDGE_SX+RACK_T,-HOOK_OUT+BRIDGE_SY+RACK_T],[-PIER_A_SX+HOOK_L+PIER_BRIDGE_SX+RACK_T,-HOOK_OUT]],
-        ]) {
-        channel(from=ps[0],to=ps[1],d=RACK_T,cap="square");
+  difference() { // Rack A - print 2
+    union() {
+      linear_extrude(height=RACK_SZ) {
+        for (ps = [
+            [[0,-HOOK_OUT],[-PIER_A_SX,-HOOK_OUT]],
+            [[-PIER_A_SX+HOOK_L,-HOOK_OUT],[-PIER_A_SX+HOOK_L,0]],
+            [[-PIER_A_SX+HOOK_L,0],[-PIER_A_SX-HOOK_INTERVAL-HANDLE_A_SX,0]],
+            [[-PIER_A_SX+HOOK_L-HOOK_INTERVAL,0],[-PIER_A_SX+HOOK_L-HOOK_INTERVAL,-HOOK_OUT]],
+            [[-PIER_A_SX+HOOK_L-HOOK_INTERVAL,-HOOK_OUT],[-PIER_A_SX-HOOK_INTERVAL,-HOOK_OUT]],
+        
+            // Base bridge
+            [[-PIER_A_SX-HOOK_INTERVAL-HANDLE_A_SX,0],[-PIER_A_SX-HOOK_INTERVAL-HANDLE_A_SX,BRIDGE_SY+RACK_T]],
+            [[-PIER_A_SX-HOOK_INTERVAL-HANDLE_A_SX,BRIDGE_SY+RACK_T],[-PIER_A_SX-HOOK_INTERVAL-HANDLE_A_SX+BRIDGE_SX+RACK_T,BRIDGE_SY+RACK_T]],
+            [[-PIER_A_SX-HOOK_INTERVAL-HANDLE_A_SX+BRIDGE_SX+RACK_T,BRIDGE_SY+RACK_T],[-PIER_A_SX-HOOK_INTERVAL-HANDLE_A_SX+BRIDGE_SX+RACK_T,0]],
+        
+            // Pier bridge
+            [[-PIER_A_SX+HOOK_L,-HOOK_OUT],[-PIER_A_SX+HOOK_L,-HOOK_OUT+BRIDGE_SY+RACK_T]],
+            [[-PIER_A_SX+HOOK_L,-HOOK_OUT+BRIDGE_SY+RACK_T],[-PIER_A_SX+HOOK_L+PIER_BRIDGE_SX+RACK_T,-HOOK_OUT+BRIDGE_SY+RACK_T]],
+            [[-PIER_A_SX+HOOK_L+PIER_BRIDGE_SX+RACK_T,-HOOK_OUT+BRIDGE_SY+RACK_T],[-PIER_A_SX+HOOK_L+PIER_BRIDGE_SX+RACK_T,-HOOK_OUT]],
+          ]) {
+          channel(from=ps[0],to=ps[1],d=RACK_T,cap="square");
+        }
       }
+    }
+    for (dy=[0,0.5,1]*RACK_SZ) { // Center marking
+      translate([-(HOOK_L/2+PIER_B_SX+HOOK_INTERVAL/2),0,dy]) rotate([0,45,0]) cube([CENTER_MARKING_SIZE,BIG,CENTER_MARKING_SIZE],center=true);
     }
   }
   
-  //TODO Marking at -(HOOK_L/2+PIER_B_SX+HOOK_INTERVAL/2)
   translate([0,52,0]) ctranslate([0,10,0])
-  union() { // Rack B - print 2
-    linear_extrude(height=RACK_SZ) {
-      for (ps = [
-          // Stem
-          [[0,0],[-PIER_B_SX-HOOK_INTERVAL-HANDLE_B_SX,0]],
+  difference() { // Rack B - print 2
+      union() {
+      linear_extrude(height=RACK_SZ) {
+        for (ps = [
+            // Stem
+            [[0,0],[-PIER_B_SX-HOOK_INTERVAL-HANDLE_B_SX,0]],
 
-          // Hook
-          [[-PIER_B_SX-HOOK_L,0],[-PIER_B_SX-HOOK_L,HOOK_OUT]],
-          [[-PIER_B_SX-HOOK_L,HOOK_OUT],[-PIER_B_SX,HOOK_OUT]],
+            // Hook
+            [[-PIER_B_SX-HOOK_L,0],[-PIER_B_SX-HOOK_L,HOOK_OUT]],
+            [[-PIER_B_SX-HOOK_L,HOOK_OUT],[-PIER_B_SX,HOOK_OUT]],
 
-          // Hook
-          [[-PIER_B_SX-HOOK_INTERVAL-HOOK_L,0],[-PIER_B_SX-HOOK_INTERVAL-HOOK_L,HOOK_OUT]],
-          [[-PIER_B_SX-HOOK_INTERVAL-HOOK_L,HOOK_OUT],[-PIER_B_SX-HOOK_INTERVAL,HOOK_OUT]],
-      
-          // Base bridge
-          [[-PIER_B_SX-HOOK_INTERVAL-HANDLE_B_SX,0],[-PIER_B_SX-HOOK_INTERVAL-HANDLE_B_SX,BRIDGE_SY+RACK_T]],
-          [[-PIER_B_SX-HOOK_INTERVAL-HANDLE_B_SX,BRIDGE_SY+RACK_T],[-PIER_B_SX-HOOK_INTERVAL-HANDLE_B_SX+BRIDGE_SX+RACK_T,BRIDGE_SY+RACK_T]],
-          [[-PIER_B_SX-HOOK_INTERVAL-HANDLE_B_SX+BRIDGE_SX+RACK_T,BRIDGE_SY+RACK_T],[-PIER_B_SX-HOOK_INTERVAL-HANDLE_B_SX+BRIDGE_SX+RACK_T,0]],
-        ]) {
-        channel(from=ps[0],to=ps[1],d=RACK_T,cap="square");
+            // Hook
+            [[-PIER_B_SX-HOOK_INTERVAL-HOOK_L,0],[-PIER_B_SX-HOOK_INTERVAL-HOOK_L,HOOK_OUT]],
+            [[-PIER_B_SX-HOOK_INTERVAL-HOOK_L,HOOK_OUT],[-PIER_B_SX-HOOK_INTERVAL,HOOK_OUT]],
+        
+            // Base bridge
+            [[-PIER_B_SX-HOOK_INTERVAL-HANDLE_B_SX,0],[-PIER_B_SX-HOOK_INTERVAL-HANDLE_B_SX,BRIDGE_SY+RACK_T]],
+            [[-PIER_B_SX-HOOK_INTERVAL-HANDLE_B_SX,BRIDGE_SY+RACK_T],[-PIER_B_SX-HOOK_INTERVAL-HANDLE_B_SX+BRIDGE_SX+RACK_T,BRIDGE_SY+RACK_T]],
+            [[-PIER_B_SX-HOOK_INTERVAL-HANDLE_B_SX+BRIDGE_SX+RACK_T,BRIDGE_SY+RACK_T],[-PIER_B_SX-HOOK_INTERVAL-HANDLE_B_SX+BRIDGE_SX+RACK_T,0]],
+          ]) {
+          channel(from=ps[0],to=ps[1],d=RACK_T,cap="square");
+        }
       }
+    }
+    for (dy=[0,0.5,1]*RACK_SZ) { // Center marking
+      translate([-(HOOK_L/2+PIER_B_SX+HOOK_INTERVAL/2),0,dy]) rotate([0,45,0]) cube([CENTER_MARKING_SIZE,BIG,CENTER_MARKING_SIZE],center=true);
     }
   }
 
