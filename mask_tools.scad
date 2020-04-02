@@ -323,7 +323,7 @@ module centerPleat() {
   }
 }
 
-union() { // Cutting rig - like, uh, wrap cloth around it and cut all sheets at once
+*union() { // Cutting rig - like, uh, wrap cloth around it and cut all sheets at once
   BRACE_SZ = 20;
   BRACE_T = 5; //TODO We *might*, be able to reduce this, but these are all kinda load bearing....
   BRIDGE_SX = 20;
@@ -388,9 +388,13 @@ union() { // Cutting rig - like, uh, wrap cloth around it and cut all sheets at 
   }
 }
 
-*union() { // Blade aligners
+union() { // Blade aligners
+  // Note, these are a little hard to use, still.  You kinda need to keep the fabric tight, in
+  // the direction of travel.  It may not be any easier than just cutting against the side of
+  // the ruler or straightedge.  BUT it might still be useful for a corner you can't get an
+  // easy angle right up against.
   BLADE_T = 1;
-  BLADE_DEPTH = 1; //TODO ???
+  BLADE_DEPTH = 2;
   WALL_ANGLE = 45; // Angle OUT of the plane of UPxCUTTING_DIRECTION
   
   union() { // X-Acto (tm or whatever)
