@@ -211,16 +211,17 @@ union() { // Pleat rack
 
   HINGE_SLOP = 1;
   HINGE_T = BRIDGE_SY;
-  HINGE_A_L = 40; //TODO ???
-  HINGE_B_L = 40; //TODO ???
+  HINGE_A_L = 40;
+  HINGE_B_L = 40;
   
+  IDLE_SLOT_ANGLE = 45;
   IDLE_SLOT_T = (BRIDGE_SY+2*RACK_T)*1.2;
   IDLE_SLOT_DOWNSET = 5;
-  IDLE_SLOT_DEPTH = BRIDGE_SX*0.6;
+  IDLE_SLOT_DEPTH = BRIDGE_SX*0.7;
   
   CENTER_MARKING_SIZE = 1;
   
-  translate([0,76,0]) ctranslate([0,10,0])
+  translate([0,51,0]) ctranslate([0,10,0])
   difference() { // Rack A - print 2
     union() {
       linear_extrude(height=RACK_SZ) {
@@ -250,7 +251,7 @@ union() { // Pleat rack
     }
   }
   
-  translate([0,52,0]) ctranslate([0,10,0])
+  translate([0,27,0]) ctranslate([0,10,0])
   difference() { // Rack B - print 2
       union() {
       linear_extrude(height=RACK_SZ) {
@@ -282,21 +283,22 @@ union() { // Pleat rack
 
   //// Bridges
 
-  translate([0,-10,0]) mirror([0,1,0])
-  difference() { // Bridge A
+  translate([0,-70,0]) mirror([0,1,0])
+  translate([0,0,BRIDGE_SY/2]) rotate([90,0,0]) difference() { // Bridge A
     union() {
       linear_extrude(height=BRIDGE_SX) { // Bridge
         channel(from=[-BRIDGE_SY*3/2,0],to=[-BRIDGE_LENGTH+BRIDGE_SY*3/2,0],d=BRIDGE_SY,cap="sharp");
       }
-      linear_extrude(height=BRIDGE_SX+RACK_T) { // Stopper
+      translate([0,0,-RACK_T]) linear_extrude(height=BRIDGE_SX+RACK_T*2) { // Stopper
         STOPPER_T = BRIDGE_SY;
-        channel(from=[-RACK_SZ-STOPPER_T/2,-BRIDGE_SY/2-RACK_T],to=[-RACK_SZ-STOPPER_T/2,BRIDGE_SY/2+RACK_T],d=STOPPER_T,cap="none");
-        channel(from=[-BRIDGE_LENGTH+RACK_SZ+STOPPER_T/2,-BRIDGE_SY/2-RACK_T],to=[-BRIDGE_LENGTH+RACK_SZ+STOPPER_T/2,BRIDGE_SY/2+RACK_T],d=STOPPER_T,cap="none");
+        channel(from=[-RACK_SZ-STOPPER_T/2,-BRIDGE_SY/2],to=[-RACK_SZ-STOPPER_T/2,BRIDGE_SY/2+RACK_T],d=STOPPER_T,cap="none");
+        channel(from=[-BRIDGE_LENGTH+RACK_SZ+STOPPER_T/2,-BRIDGE_SY/2],to=[-BRIDGE_LENGTH+RACK_SZ+STOPPER_T/2,BRIDGE_SY/2+RACK_T],d=STOPPER_T,cap="none");
       }
+      // Hinge ball
       translate([-BRIDGE_LENGTH/2,0,0]) cmirror([1,0,0]) translate([BRIDGE_LENGTH/2,0,0]) {
-        translate([-RACK_SZ-HINGE_T/2-HINGE_T-HINGE_SLOP/2,-BRIDGE_SY/2-RACK_T,HINGE_A_L+BRIDGE_SX]) translate([0,BRIDGE_SX/2,0]) scale([1,1,3]) rotate([0,45,0]) cube([HINGE_T*sqrt(1/2),BRIDGE_SX,HINGE_T*sqrt(1/2)],center=true);
-        linear_extrude(height=HINGE_A_L+BRIDGE_SX) { // Hinge ball
-          channel(from=[-RACK_SZ-HINGE_T/2-HINGE_T-HINGE_SLOP/2,-BRIDGE_SY/2-RACK_T],to=[-RACK_SZ-HINGE_T/2-HINGE_T-HINGE_SLOP/2,-BRIDGE_SY/2-RACK_T+BRIDGE_SX],d=HINGE_T,cap="none");
+        translate([-RACK_SZ-HINGE_T/2-HINGE_T-HINGE_SLOP/2,-BRIDGE_SY/2,HINGE_A_L+BRIDGE_SX]) translate([0,BRIDGE_SX/2,0]) scale([1,1,3]) rotate([0,45,0]) cube([HINGE_T*sqrt(1/2),BRIDGE_SX,HINGE_T*sqrt(1/2)],center=true);
+        linear_extrude(height=HINGE_A_L+BRIDGE_SX) {
+          channel(from=[-RACK_SZ-HINGE_T/2-HINGE_T-HINGE_SLOP/2,-BRIDGE_SY/2],to=[-RACK_SZ-HINGE_T/2-HINGE_T-HINGE_SLOP/2,-BRIDGE_SY/2+BRIDGE_SX],d=HINGE_T,cap="none");
         }
       }
     }
@@ -305,15 +307,16 @@ union() { // Pleat rack
     }
   }
 
-  difference() { // Bridge B
+  translate([0,20,0])
+  translate([0,0,BRIDGE_SY/2]) rotate([90,0,0]) difference() { // Bridge B
     union() {
       linear_extrude(height=BRIDGE_SX) { // Bridge
         channel(from=[-BRIDGE_SY*3/2,0],to=[-BRIDGE_LENGTH+BRIDGE_SY*3/2,0],d=BRIDGE_SY,cap="sharp");
       }
-      linear_extrude(height=BRIDGE_SX+RACK_T) { // Stopper
+      translate([0,0,-RACK_T]) linear_extrude(height=BRIDGE_SX+RACK_T*2) { // Stopper
         STOPPER_T = BRIDGE_SY;
-        channel(from=[-RACK_SZ-STOPPER_T/2,-BRIDGE_SY/2-RACK_T],to=[-RACK_SZ-STOPPER_T/2,BRIDGE_SY/2+RACK_T],d=STOPPER_T,cap="none");
-        channel(from=[-BRIDGE_LENGTH+RACK_SZ+STOPPER_T/2,-BRIDGE_SY/2-RACK_T],to=[-BRIDGE_LENGTH+RACK_SZ+STOPPER_T/2,BRIDGE_SY/2+RACK_T],d=STOPPER_T,cap="none");
+        channel(from=[-RACK_SZ-STOPPER_T/2,-BRIDGE_SY/2],to=[-RACK_SZ-STOPPER_T/2,BRIDGE_SY/2+RACK_T],d=STOPPER_T,cap="none");
+        channel(from=[-BRIDGE_LENGTH+RACK_SZ+STOPPER_T/2,-BRIDGE_SY/2],to=[-BRIDGE_LENGTH+RACK_SZ+STOPPER_T/2,BRIDGE_SY/2+RACK_T],d=STOPPER_T,cap="none");
       }
       translate([-BRIDGE_LENGTH/2,0,0]) cmirror([1,0,0]) translate([BRIDGE_LENGTH/2,0,0]) translate([0,BRIDGE_SY/2,0])
        linear_extrude(height=BRIDGE_SX) { // Hinge socket
@@ -324,22 +327,23 @@ union() { // Pleat rack
         channel(from=[-RACK_SZ-HINGE_T/2-HINGE_T*2-HINGE_SLOP,HINGE_B_L/2],to=[-RACK_SZ-HINGE_T/2-HINGE_T*2-HINGE_SLOP,HINGE_B_L],d=HINGE_T,cap="sharp");
       }
     }
-    translate([0,HINGE_B_L-IDLE_SLOT_DOWNSET,BRIDGE_SX]) rotate([-30,0,0]) translate([0,0,-IDLE_SLOT_DEPTH]) translate([0,0,BIG/2]) cube([BIG,IDLE_SLOT_T,BIG],center=true);
+    // Idle slot
+    translate([0,HINGE_B_L-IDLE_SLOT_DOWNSET,BRIDGE_SX]) rotate([-IDLE_SLOT_ANGLE,0,0]) translate([0,0,-IDLE_SLOT_DEPTH]) translate([0,0,BIG/2]) cube([BIG,IDLE_SLOT_T,BIG],center=true);
     for (dy=[0,0.5,1]*BRIDGE_SX) { // Center marking
       translate([-BRIDGE_LENGTH/2,0,dy]) rotate([0,45,0]) cube([CENTER_MARKING_SIZE,BIG,CENTER_MARKING_SIZE],center=true);
     }
   }
 
-  translate([0,-35,0])
-  difference() { // Pier bridge
+  translate([0,-75,0])
+  translate([0,0,BRIDGE_SY/2]) rotate([90,0,0]) difference() { // Pier bridge
     union() {
       linear_extrude(height=PIER_BRIDGE_SX) { // Bridge
         channel(from=[-BRIDGE_SY*3/2,0],to=[-BRIDGE_LENGTH+BRIDGE_SY*3/2,0],d=BRIDGE_SY,cap="sharp");
       }
-      linear_extrude(height=PIER_BRIDGE_SX+RACK_T) { // Stopper
+      translate([0,0,-RACK_T]) linear_extrude(height=PIER_BRIDGE_SX+RACK_T*2) { // Stopper
         STOPPER_T = BRIDGE_SY;
-        channel(from=[-RACK_SZ-STOPPER_T/2,-BRIDGE_SY/2-RACK_T],to=[-RACK_SZ-STOPPER_T/2,BRIDGE_SY/2+RACK_T],d=STOPPER_T,cap="none");
-        channel(from=[-BRIDGE_LENGTH+RACK_SZ+STOPPER_T/2,-BRIDGE_SY/2-RACK_T],to=[-BRIDGE_LENGTH+RACK_SZ+STOPPER_T/2,BRIDGE_SY/2+RACK_T],d=STOPPER_T,cap="none");
+        channel(from=[-RACK_SZ-STOPPER_T/2,-BRIDGE_SY/2],to=[-RACK_SZ-STOPPER_T/2,BRIDGE_SY/2+RACK_T],d=STOPPER_T,cap="none");
+        channel(from=[-BRIDGE_LENGTH+RACK_SZ+STOPPER_T/2,-BRIDGE_SY/2],to=[-BRIDGE_LENGTH+RACK_SZ+STOPPER_T/2,BRIDGE_SY/2+RACK_T],d=STOPPER_T,cap="none");
       }
     }
     for (dy=[0,0.5,1]*PIER_BRIDGE_SX) { // Center marking
