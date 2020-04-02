@@ -243,11 +243,6 @@ union() { // Pleat rack
           [[-PIER_B_SX-HOOK_INTERVAL-HANDLE_B_SX,0],[-PIER_B_SX-HOOK_INTERVAL-HANDLE_B_SX,BRIDGE_SY+RACK_T]],
           [[-PIER_B_SX-HOOK_INTERVAL-HANDLE_B_SX,BRIDGE_SY+RACK_T],[-PIER_B_SX-HOOK_INTERVAL-HANDLE_B_SX+BRIDGE_SX+RACK_T,BRIDGE_SY+RACK_T]],
           [[-PIER_B_SX-HOOK_INTERVAL-HANDLE_B_SX+BRIDGE_SX+RACK_T,BRIDGE_SY+RACK_T],[-PIER_B_SX-HOOK_INTERVAL-HANDLE_B_SX+BRIDGE_SX+RACK_T,0]],
-
-          // Pier bridge
-          [[-PIER_B_SX-HOOK_L,0],[-PIER_B_SX-HOOK_L,BRIDGE_SY+RACK_T]],
-          [[-PIER_B_SX-HOOK_L,BRIDGE_SY+RACK_T],[-PIER_B_SX-HOOK_L-BRIDGE_SX-RACK_T,BRIDGE_SY+RACK_T]],
-          [[-PIER_B_SX-HOOK_L-BRIDGE_SX-RACK_T,BRIDGE_SY+RACK_T],[-PIER_B_SX-HOOK_L-BRIDGE_SX-RACK_T,0]],
         ]) {
         channel(from=ps[0],to=ps[1],d=RACK_T,cap="square");
       }
@@ -296,8 +291,8 @@ union() { // Pleat rack
     translate([0,HINGE_B_L-IDLE_SLOT_DOWNSET,BRIDGE_SX]) rotate([-30,0,0]) translate([0,0,-IDLE_SLOT_DEPTH]) translate([0,0,BIG/2]) cube([BIG,IDLE_SLOT_T,BIG],center=true);
   }
 
-  translate([0,-40,0]) cmirror([0,1,0]) translate([0,5,0])
-  union() { // Pier bridge - print 2
+  translate([0,-35,0])
+  union() { // Pier bridge
     linear_extrude(height=BRIDGE_SX) { // Bridge
       channel(from=[-BRIDGE_SY*3/2,0],to=[-BRIDGE_LENGTH+BRIDGE_SY*3/2,0],d=BRIDGE_SY,cap="sharp");
     }
