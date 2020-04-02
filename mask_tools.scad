@@ -157,7 +157,7 @@ module centerPleat() {
   }
 }
 
-*union() { // Pleat rack
+union() { // Pleat rack
   RACK_SZ = 20;
   RACK_T = 1.5;
   HOOK_L = PLEAT_SY; //TODO Correct?
@@ -188,7 +188,7 @@ module centerPleat() {
   PIER_B_SX = PIER_A_SX-HOOK_L+RACK_T+CLOTH_SPACE/2;
   
   HANDLE_A_SX = 40; //TODO ???
-  HANDLE_B_SX = 70; //TODO ???
+  HANDLE_B_SX = 80; //TODO ???
 
   HINGE_SLOP = 1;
   HINGE_T = BRIDGE_SY;
@@ -323,7 +323,7 @@ module centerPleat() {
   }
 }
 
-union() { // Cutting rig - like, uh, wrap cloth around it and cut all sheets at once
+*union() { // Cutting rig - like, uh, wrap cloth around it and cut all sheets at once
   BRACE_SZ = 20;
   BRACE_T = 5; //TODO We *might*, be able to reduce this, but these are all kinda load bearing....
   BRIDGE_SX = 20;
