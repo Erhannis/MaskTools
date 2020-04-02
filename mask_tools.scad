@@ -15,6 +15,12 @@ If you print anything at a 45* angle, e.g. to fit on a normal bed, you should
   You may have to mess with Cura's "infill line directions".
 I had trouble printing infill at 0.4mm layer height with a 0.4mm nozzle - Cura does some
   chicanery with the infill widths that overtaxes the printer, I think.
+
+Current list of recommended parts:
+  Ruler spacer x2
+  Cutting rig
+  Pleat rack
+
 */
 
 use <deps.link/erhannisScad/misc.scad>
