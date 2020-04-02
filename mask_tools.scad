@@ -323,7 +323,7 @@ module centerPleat() {
   }
 }
 
-union() { // Cutting rig - like, uh, wrap cloth around it and cut all sheets at once
+*union() { // Cutting rig - like, uh, wrap cloth around it and cut all sheets at once
   BRACE_SZ = 20;
   BRACE_T = 5; //TODO We *might*, be able to reduce this, but these are all kinda load bearing....
   BRIDGE_SX = 20;
@@ -388,5 +388,30 @@ union() { // Cutting rig - like, uh, wrap cloth around it and cut all sheets at 
   }
 }
 
-*union() { // Blade aligners
+union() { // Blade aligners
+  BLADE_T = 1;
+  BLADE_DEPTH = 1; //TODO ???
+  WALL_ANGLE = 45; // Angle OUT of the plane of UPxCUTTING_DIRECTION
+  
+  union() { // X-Acto (tm or whatever)
+    EDGE_ANGLE = 30; // Angle within the plane of the blade, vs the cut line.  At 0, imagine the xacto is straight up and down.
+    BLADE_ANGLE = 22.19; // The (un)pointiness of the blade.  Rough value; did math on the blade I had handy
+    B_SX = 50;
+    B_SY = 10;
+    B_SZ = 10;
+    difference() {
+      translate([-B_SX/4,-B_SY,0]) cube([B_SX,B_SY,B_SZ]); // Body
+      
+      // Notches
+      translate([0,0,0]) cube([1,1,BIG],center=true);
+      translate([0,0,B_SZ]) cube([1,BIG,1],center=true);
+      translate([0,-B_SY,0]) cube([1,1,BIG],center=true);
+      
+      rotate([WALL_ANGLE,0,0]) translate([0,0,-BLADE_DEPTH]) rotate([0,EDGE_ANGLE,0]) rotate([90,0,0])
+       difference() {
+        rotate([0,0,90-BLADE_ANGLE]) translate([0,0,-BLADE_T/2]) cube([BIG,BIG,BLADE_T]);
+        OXm();
+      }
+    }
+  }
 }
