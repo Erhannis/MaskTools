@@ -323,7 +323,7 @@ module centerPleat() {
   }
 }
 
-*union() { // Cutting rig - like, uh, wrap cloth around it and cut all sheets at once
+union() { // Cutting rig - like, uh, wrap cloth around it and cut all sheets at once
   BRACE_SZ = 20;
   BRACE_T = 5; //TODO We *might*, be able to reduce this, but these are all kinda load bearing....
   BRIDGE_SX = 20;
@@ -333,7 +333,7 @@ module centerPleat() {
   BRIDGE_LENGTH = SX+0*INCH + STOPPER_T*2 + BRACE_SZ*2;
   CUTTING_GAP = 2;
   
-  ADJUSTED_SPAN = SY-BIG_BRIDGE_SY-2*SM_BRIDGE_SY-CUTTING_GAP;
+  ADJUSTED_SPAN = SY-BIG_BRIDGE_SY/2-SM_BRIDGE_SY-CUTTING_GAP/2;
 
   translate([0,45,0]) cmirror([0,1,0]) translate([0,15,0])
   union() { // Edge brace
@@ -388,7 +388,7 @@ module centerPleat() {
   }
 }
 
-union() { // Blade aligners
+*union() { // Blade aligners
   BLADE_T = 1;
   BLADE_DEPTH = 1; //TODO ???
   WALL_ANGLE = 45; // Angle OUT of the plane of UPxCUTTING_DIRECTION
