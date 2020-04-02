@@ -221,6 +221,8 @@ union() { // Pleat rack
   
   CENTER_MARKING_SIZE = 1;
   
+  HOLDING_TAB_SIZE = 20;
+  
   translate([0,51,0]) ctranslate([0,10,0])
   difference() { // Rack A - print 2
     union() {
@@ -271,6 +273,8 @@ union() { // Pleat rack
             [[-PIER_B_SX-HOOK_INTERVAL-HANDLE_B_SX,0],[-PIER_B_SX-HOOK_INTERVAL-HANDLE_B_SX,BRIDGE_SY+RACK_T]],
             [[-PIER_B_SX-HOOK_INTERVAL-HANDLE_B_SX,BRIDGE_SY+RACK_T],[-PIER_B_SX-HOOK_INTERVAL-HANDLE_B_SX+BRIDGE_SX+RACK_T,BRIDGE_SY+RACK_T]],
             [[-PIER_B_SX-HOOK_INTERVAL-HANDLE_B_SX+BRIDGE_SX+RACK_T,BRIDGE_SY+RACK_T],[-PIER_B_SX-HOOK_INTERVAL-HANDLE_B_SX+BRIDGE_SX+RACK_T,0]],
+        
+            [[-PIER_B_SX-HOOK_INTERVAL-HANDLE_B_SX,0],[-PIER_B_SX-HOOK_INTERVAL-HANDLE_B_SX-HOLDING_TAB_SIZE,0]],
           ]) {
           channel(from=ps[0],to=ps[1],d=RACK_T,cap="square");
         }
