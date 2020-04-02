@@ -4,6 +4,17 @@ Templates, forms, etc.
 
 To print different things, basically just solo different elements.  (Put a "!" in front
 of the element in question.)  Not super well organized, sorry.
+
+Printing:
+EVERYTHING IS PRINTED AT -0.08mm HORIZONTAL EXPANSION.  (A Cura setting.)
+  If this is merely ignored, almost certainly things will not fit together.
+For speed, print without the top or bottom layers.
+If you print anything at a 45* angle, e.g. to fit on a normal bed, you should
+  make sure the infill crisscrosses the part, rather than running lengthwise and across -
+  the part is stronger with crisscrossing infill.
+  You may have to mess with Cura's "infill line directions".
+I had trouble printing infill at 0.4mm layer height with a 0.4mm nozzle - Cura does some
+  chicanery with the infill widths that overtaxes the printer, I think.
 */
 
 use <deps.link/erhannisScad/misc.scad>
@@ -182,6 +193,7 @@ union() { // Pleat rack
   
   BRIDGE_SY = HOOK_GAP;
   BRIDGE_SX = 20;
+  PIER_BRIDGE_SX = BRIDGE_SX/2;
   
   BRIDGE_LENGTH = 6.5*INCH;
   
@@ -217,8 +229,8 @@ union() { // Pleat rack
       
           // Pier bridge
           [[-PIER_A_SX+HOOK_L,-HOOK_OUT],[-PIER_A_SX+HOOK_L,-HOOK_OUT+BRIDGE_SY+RACK_T]],
-          [[-PIER_A_SX+HOOK_L,-HOOK_OUT+BRIDGE_SY+RACK_T],[-PIER_A_SX+HOOK_L+BRIDGE_SX+RACK_T,-HOOK_OUT+BRIDGE_SY+RACK_T]],
-          [[-PIER_A_SX+HOOK_L+BRIDGE_SX+RACK_T,-HOOK_OUT+BRIDGE_SY+RACK_T],[-PIER_A_SX+HOOK_L+BRIDGE_SX+RACK_T,-HOOK_OUT]],
+          [[-PIER_A_SX+HOOK_L,-HOOK_OUT+BRIDGE_SY+RACK_T],[-PIER_A_SX+HOOK_L+PIER_BRIDGE_SX+RACK_T,-HOOK_OUT+BRIDGE_SY+RACK_T]],
+          [[-PIER_A_SX+HOOK_L+PIER_BRIDGE_SX+RACK_T,-HOOK_OUT+BRIDGE_SY+RACK_T],[-PIER_A_SX+HOOK_L+PIER_BRIDGE_SX+RACK_T,-HOOK_OUT]],
         ]) {
         channel(from=ps[0],to=ps[1],d=RACK_T,cap="square");
       }
@@ -227,7 +239,7 @@ union() { // Pleat rack
   
   //TODO Marking at -(HOOK_L/2+PIER_B_SX+HOOK_INTERVAL/2)
   translate([0,52,0]) ctranslate([0,10,0])
-  !translate([HOOK_L/2+PIER_B_SX+HOOK_INTERVAL/2,0,0]) union() { // Rack B - print 2
+  union() { // Rack B - print 2
     linear_extrude(height=RACK_SZ) {
       for (ps = [
           // Stem
@@ -295,10 +307,10 @@ union() { // Pleat rack
 
   translate([0,-35,0])
   union() { // Pier bridge
-    linear_extrude(height=BRIDGE_SX) { // Bridge
+    linear_extrude(height=PIER_BRIDGE_SX) { // Bridge
       channel(from=[-BRIDGE_SY*3/2,0],to=[-BRIDGE_LENGTH+BRIDGE_SY*3/2,0],d=BRIDGE_SY,cap="sharp");
     }
-    linear_extrude(height=BRIDGE_SX+RACK_T) { // Stopper
+    linear_extrude(height=PIER_BRIDGE_SX+RACK_T) { // Stopper
       STOPPER_T = BRIDGE_SY;
       channel(from=[-RACK_SZ-STOPPER_T/2,-BRIDGE_SY/2-RACK_T],to=[-RACK_SZ-STOPPER_T/2,BRIDGE_SY/2+RACK_T],d=STOPPER_T,cap="none");
       channel(from=[-BRIDGE_LENGTH+RACK_SZ+STOPPER_T/2,-BRIDGE_SY/2-RACK_T],to=[-BRIDGE_LENGTH+RACK_SZ+STOPPER_T/2,BRIDGE_SY/2+RACK_T],d=STOPPER_T,cap="none");
