@@ -364,19 +364,19 @@ union() { // Cutting rig - like, uh, wrap cloth around it and cut all sheets at 
   //translate([BRACE_T/2,-20,0]) cube([ADJUSTED_SPAN,3,10]);
   //translate([BRACE_T/2,-15,0]) cube([BRIDGE_SX,3,10]);
 
-  translate([BRIDGE_LENGTH,0,0]) translate([0,5,0]) rotate([90,0,0])
+  translate([BRIDGE_LENGTH,0,0]) translate([0,5,BIG_BRIDGE_SY/2]) rotate([90,0,0])
   union() { // Big bridge
     linear_extrude(height=BRIDGE_SX) { // Bridge
       channel(from=[0,0],to=[-BRIDGE_LENGTH,0],d=BIG_BRIDGE_SY,cap="triangle"); // I'd prefer "sharp", but that makes it juuust too long for my printer
     }
-    linear_extrude(height=BRIDGE_SX+BRACE_T*2) { // Stopper
-      channel(from=[-BRACE_SZ-STOPPER_T/2,-BIG_BRIDGE_SY/2-BRACE_T],to=[-BRACE_SZ-STOPPER_T/2,BIG_BRIDGE_SY/2+BRACE_T],d=STOPPER_T,cap="none");
-      channel(from=[-BRIDGE_LENGTH+BRACE_SZ+STOPPER_T/2,-BIG_BRIDGE_SY/2-BRACE_T],to=[-BRIDGE_LENGTH+BRACE_SZ+STOPPER_T/2,BIG_BRIDGE_SY/2+BRACE_T],d=STOPPER_T,cap="none");
+    translate([0,0,-BRACE_T]) linear_extrude(height=BRIDGE_SX+BRACE_T*2) { // Stopper
+      channel(from=[-BRACE_SZ-STOPPER_T/2,-BIG_BRIDGE_SY/2],to=[-BRACE_SZ-STOPPER_T/2,BIG_BRIDGE_SY/2+BRACE_T],d=STOPPER_T,cap="none");
+      channel(from=[-BRIDGE_LENGTH+BRACE_SZ+STOPPER_T/2,-BIG_BRIDGE_SY/2],to=[-BRIDGE_LENGTH+BRACE_SZ+STOPPER_T/2,BIG_BRIDGE_SY/2+BRACE_T],d=STOPPER_T,cap="none");
     }
   }
   //translate([-STOPPER_T-BRACE_SZ,-20,0]) mirror([1,0,0]) cube([10*INCH,3,10]);
 
-  translate([BRIDGE_LENGTH,-20,0]) cmirror([0,1,0]) translate([0,5,0])
+  translate([BRIDGE_LENGTH,-50,0]) cmirror([0,1,0]) translate([0,-2.5,SM_BRIDGE_SY/2]) rotate([90,0,0])
   union() { // Cutting bridge - print 2
     linear_extrude(height=BRIDGE_SX) { // Bridge
       channel(from=[0,0],to=[-BRIDGE_LENGTH,0],d=SM_BRIDGE_SY,cap="triangle"); // I'd prefer "sharp", but that makes it juuust too long for my printer
