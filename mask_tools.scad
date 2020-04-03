@@ -382,17 +382,38 @@ module centerPleat() {
   }
 }
 
-union() { // Ruler spacer (pull type)
-  RULER_WIDTH = 1*INCH;
+union() { // Ruler spacer (corner type)
+  /*
+  Attach two of these to the end of a straightedge,
+  such that the outlined corners hug the corners of the straightedge.
+  ...Uh, like:
+                   
+     000RULER000   
+   | 00000000000 |        
+   |__         __|  \      
+   |             |  | This distance is the length measured by the spacer
+   |             |  |   
+   |             |  /
+  
+  */
+  
+  RULER_MEASUREMENT = 9*INCH;
+  //RULER_MEASUREMENT = 1*INCH;
+  
+  RULER_WIDTH = 0.5*INCH;
   RULER_T = TEMPLATE_SZ;
-  TRIANGLE_SIZE = RULER_WIDTH*2;
-  cube([SX,RULER_WIDTH, RULER_T],center=true);
-  cmirror([1,0,0]) translate([-SX/2,0,0]) {
-    linear_extrude(height=RULER_T, center=true) triangle(TRIANGLE_SIZE, dir=[1,0]);
-    translate([0,0,RULER_T/2]) {
-      translate([0,-RULER_T*2/2,0]) cube(RULER_T*2);
-      cmirror([0,1,0]) translate([0,RULER_WIDTH,0]) translate([0,-RULER_T/2,0]) cube(RULER_T);
+  HOOK_L = RULER_WIDTH*2;
+  difference() {
+    union() {
+      cube([RULER_MEASUREMENT,RULER_WIDTH,RULER_T]);
+      mirror([1,0,0]) mirror([1,1,0]) cube([HOOK_L,RULER_WIDTH,RULER_T]);
+      mirror([1,0,0]) cube([HOOK_L,RULER_WIDTH,RULER_T]);
     }
+    // Indicator lines
+    mirror([1,0,0]) mirror([1,1,0]) translate([0,RULER_WIDTH/2,RULER_T-1]) rotate([45,0,0]) translate([-RULER_WIDTH/2,0,0]) cube([HOOK_L+RULER_WIDTH/2,RULER_WIDTH,RULER_T]);
+    mirror([1,0,0]) translate([0,RULER_WIDTH/2,RULER_T-1]) rotate([45,0,0]) translate([-RULER_WIDTH/2,0,0]) cube([HOOK_L+RULER_WIDTH/2,RULER_WIDTH,RULER_T]);
+    mirror([1,0,0]) mirror([1,1,0]) translate([0,RULER_WIDTH/2,1]) mirror([0,0,1]) rotate([45,0,0]) translate([-RULER_WIDTH/2,0,0]) cube([HOOK_L+RULER_WIDTH/2,RULER_WIDTH,RULER_T]);
+    mirror([1,0,0]) translate([0,RULER_WIDTH/2,1]) mirror([0,0,1]) rotate([45,0,0]) translate([-RULER_WIDTH/2,0,0]) cube([HOOK_L+RULER_WIDTH/2,RULER_WIDTH,RULER_T]);
   }
 }
 
