@@ -215,11 +215,11 @@ union() { // Pleat rack
   
   BRIDGE_LENGTH = 7*INCH;
   
-  PIER_A_SX = HOOK_L+BRIDGE_SX+RACK_T;
+  PIER_A_SX = HOOK_L+PIER_BRIDGE_SX+RACK_T;
   PIER_B_SX = PIER_A_SX-HOOK_L+RACK_T+CLOTH_SPACE/2;
   
-  HANDLE_A_SX = 54+(SY-6*INCH)/2-HOOK_INTERVAL_ADJUSTMENT/2;
-  HANDLE_B_SX = 89+(SY-6*INCH)/2-HOOK_INTERVAL_ADJUSTMENT/2;
+  HANDLE_A_SX = 35+(SY-6*INCH)/2-HOOK_INTERVAL_ADJUSTMENT/2;
+  HANDLE_B_SX = 70+(SY-6*INCH)/2-HOOK_INTERVAL_ADJUSTMENT/2;
 
   HINGE_SLOP = 1;
   HINGE_T = BRIDGE_SY;
@@ -316,6 +316,8 @@ union() { // Pleat rack
         linear_extrude(height=HINGE_A_L+BRIDGE_SX) {
           channel(from=[-RACK_SZ-HINGE_T/2-HINGE_T-HINGE_SLOP/2,-BRIDGE_SY/2],to=[-RACK_SZ-HINGE_T/2-HINGE_T-HINGE_SLOP/2,-BRIDGE_SY/2+BRIDGE_SX],d=HINGE_T,cap="none");
         }
+        // Catch nub
+        translate([-RACK_SZ-HINGE_T/2-HINGE_T-HINGE_SLOP/2,-BRIDGE_SY/2+BRIDGE_SX + HINGE_T*3/2,HINGE_A_L+BRIDGE_SX]) mirror([0,0,1]) rotate([180,0,0]) linear_extrude(height=HINGE_T*3/2) triangle(height=3*HINGE_T);
       }
     }
     for (dy=[0,0.5,1]*BRIDGE_SX) { // Center marking
