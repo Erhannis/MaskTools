@@ -9,10 +9,12 @@ Printing:
 * EVERYTHING IS PRINTED AT -0.08mm HORIZONTAL EXPANSION.  (A Cura setting.)
     If this is merely ignored, almost certainly things will not fit together.
 * For speed, print without the top or bottom layers.
+  * Most of the settings listed here are for the purposes of speed.
 * If you print anything at a 45* angle, e.g. to fit on a normal bed, you should
     make sure the infill crisscrosses the part, rather than running lengthwise and across -
     the part is stronger with crisscrossing infill.
     You may have to mess with Cura's "infill line directions".
+      Infill Line Directions = [0,90,180,270]
 * I had trouble printing infill at 0.4mm layer height with a 0.4mm nozzle - Cura does some
     chicanery with the infill widths that overtaxes the printer, I think.
 * You should probably take a 
@@ -27,10 +29,15 @@ Printing:
       * 0.2mm layer height (my printer had problems with the infill at higher heights)
     * Racks:
       * 0.4mm layer height (there's no infill, so my printer was fine with it)
+  * Cutting rig:
+    * No brim or skirt (no room)
+    * Everything at 45*
+    * Infill Line Directions = [0,90,180,270]
+    * 0.2mm layer height
   * Maybe some stuff I forgot, sorry
   
 Current list of recommended parts:
-  Ruler spacer x2
+  Ruler spacer, 9 inch (pick a type) x2
   Cutting rig
   Pleat rack
 */
@@ -186,7 +193,7 @@ module centerPleat() {
   }
 }
 
-union() { // Pleat rack
+*union() { // Pleat rack
   RACK_SZ = 20;
   RACK_T = 1.5;
   HOOK_L = PLEAT_SY; //TODO Correct?
@@ -426,7 +433,7 @@ union() { // Pleat rack
   }
 }
 
-*union() { // Cutting rig - like, uh, wrap cloth around it and cut all sheets at once
+union() { // Cutting rig - like, uh, wrap cloth around it and cut all sheets at once
   BRACE_SZ = 20;
   BRACE_T = 5; //TODO We *might*, be able to reduce this, but these are all kinda load bearing....
   BRIDGE_SX = 20;
@@ -467,8 +474,8 @@ union() { // Pleat rack
   //translate([BRACE_T/2,-20,0]) cube([ADJUSTED_SPAN,3,10]);
   //translate([BRACE_T/2,-15,0]) cube([BRIDGE_SX,3,10]);
 
-  translate([BRIDGE_LENGTH,0,0]) translate([0,5,BIG_BRIDGE_SY/2]) rotate([90,0,0])
-  union() { // Big bridge
+  translate([BRIDGE_LENGTH,5,0])
+  translate([0,0,BIG_BRIDGE_SY/2]) rotate([90,0,0]) union() { // Big bridge
     linear_extrude(height=BRIDGE_SX) { // Bridge
       channel(from=[0,0],to=[-BRIDGE_LENGTH,0],d=BIG_BRIDGE_SY,cap="triangle"); // I'd prefer "sharp", but that makes it juuust too long for my printer
     }
@@ -479,8 +486,8 @@ union() { // Pleat rack
   }
   //translate([-STOPPER_T-BRACE_SZ,-20,0]) mirror([1,0,0]) cube([10*INCH,3,10]);
 
-  translate([BRIDGE_LENGTH,-50,0]) cmirror([0,1,0]) translate([0,-2.5,SM_BRIDGE_SY/2]) rotate([90,0,0])
-  union() { // Cutting bridge - print 2
+  translate([BRIDGE_LENGTH,-50,0]) cmirror([0,1,0]) translate([0,-2.5,0])
+  translate([0,0,SM_BRIDGE_SY/2]) rotate([90,0,0]) union() { // Cutting bridge - print 2
     linear_extrude(height=BRIDGE_SX) { // Bridge
       channel(from=[0,0],to=[-BRIDGE_LENGTH,0],d=SM_BRIDGE_SY,cap="triangle"); // I'd prefer "sharp", but that makes it juuust too long for my printer
     }
