@@ -368,6 +368,13 @@ union() { // Pleat rack
       translate([-BRIDGE_LENGTH/2,0,dy]) rotate([0,45,0]) cube([CENTER_MARKING_SIZE,BIG,CENTER_MARKING_SIZE],center=true);
     }
   }
+  
+  translate([-BRIDGE_LENGTH/2,-20,0])
+  difference() { // Bridge B support block (for holding the assembly down by)
+    // Put this under the center of bridge B, so it doesn't bend when you push down on it
+    translate([0,0,BRIDGE_SY]) cube([BRIDGE_SX,BRIDGE_SX+BRIDGE_SY*2,BRIDGE_SY*2],center=true);
+    translate([0,0,BRIDGE_SY*3/2]) cube([BIG,BRIDGE_SX,BRIDGE_SY],center=true);
+  }
 }
 
 *union() { // Ruler spacer (push type)
