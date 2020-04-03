@@ -6,21 +6,33 @@ To print different things, basically just solo different elements.  (Put a "!" i
 of the element in question.)  Not super well organized, sorry.
 
 Printing:
-EVERYTHING IS PRINTED AT -0.08mm HORIZONTAL EXPANSION.  (A Cura setting.)
-  If this is merely ignored, almost certainly things will not fit together.
-For speed, print without the top or bottom layers.
-If you print anything at a 45* angle, e.g. to fit on a normal bed, you should
-  make sure the infill crisscrosses the part, rather than running lengthwise and across -
-  the part is stronger with crisscrossing infill.
-  You may have to mess with Cura's "infill line directions".
-I had trouble printing infill at 0.4mm layer height with a 0.4mm nozzle - Cura does some
-  chicanery with the infill widths that overtaxes the printer, I think.
-
+* EVERYTHING IS PRINTED AT -0.08mm HORIZONTAL EXPANSION.  (A Cura setting.)
+    If this is merely ignored, almost certainly things will not fit together.
+* For speed, print without the top or bottom layers.
+* If you print anything at a 45* angle, e.g. to fit on a normal bed, you should
+    make sure the infill crisscrosses the part, rather than running lengthwise and across -
+    the part is stronger with crisscrossing infill.
+    You may have to mess with Cura's "infill line directions".
+* I had trouble printing infill at 0.4mm layer height with a 0.4mm nozzle - Cura does some
+    chicanery with the infill widths that overtaxes the printer, I think.
+* You should probably take a 
+* Here's how I printed things:
+  * -0.08 Horizontal Expansion
+  * -0.24 Initial Layer Horizontal Expansion (to help reduce bulging at base)
+  * No top or bottom faces (Top/Bottom Thickness = 0)
+  * 3 shells (Wall Thickness)
+  * Same outer wall speed as inner wall speed (Outer Wall Speed = 30.0mm/s)
+  * Pleat rack:
+    * Bridges:
+      * 0.2mm layer height (my printer had problems with the infill at higher heights)
+    * Racks:
+      * 0.4mm layer height (there's no infill, so my printer was fine with it)
+  * Maybe some stuff I forgot, sorry
+  
 Current list of recommended parts:
   Ruler spacer x2
   Cutting rig
   Pleat rack
-
 */
 
 use <deps.link/erhannisScad/misc.scad>
@@ -174,7 +186,7 @@ module centerPleat() {
   }
 }
 
-union() { // Pleat rack
+*union() { // Pleat rack
   RACK_SZ = 20;
   RACK_T = 1.5;
   HOOK_L = PLEAT_SY; //TODO Correct?
@@ -356,7 +368,21 @@ union() { // Pleat rack
   }
 }
 
-*union() { // Ruler spacer
+*union() { // Ruler spacer (push type)
+  RULER_WIDTH = 1*INCH;
+  RULER_T = TEMPLATE_SZ;
+  TRIANGLE_SIZE = RULER_WIDTH*2;
+  cube([SX,RULER_WIDTH, RULER_T],center=true);
+  cmirror([1,0,0]) translate([-SX/2,0,0]) {
+    linear_extrude(height=RULER_T, center=true) triangle(TRIANGLE_SIZE, dir=[1,0]);
+    translate([0,0,RULER_T/2]) {
+      translate([0,-RULER_T*2/2,0]) cube(RULER_T*2);
+      cmirror([0,1,0]) translate([0,RULER_WIDTH,0]) translate([0,-RULER_T/2,0]) cube(RULER_T);
+    }
+  }
+}
+
+union() { // Ruler spacer (pull type)
   RULER_WIDTH = 1*INCH;
   RULER_T = TEMPLATE_SZ;
   TRIANGLE_SIZE = RULER_WIDTH*2;
