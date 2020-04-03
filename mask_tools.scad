@@ -193,7 +193,7 @@ module centerPleat() {
   }
 }
 
-*union() { // Pleat rack
+union() { // Pleat rack
   RACK_SZ = 20;
   RACK_T = 1.5;
   HOOK_L = PLEAT_SY; //TODO Correct?
@@ -379,8 +379,8 @@ module centerPleat() {
   translate([-BRIDGE_LENGTH/2,-20,0])
   difference() { // Bridge B support block (for holding the assembly down by)
     // Put this under the center of bridge B, so it doesn't bend when you push down on it
-    translate([0,0,BRIDGE_SY]) cube([BRIDGE_SX,BRIDGE_SX+BRIDGE_SY*2,BRIDGE_SY*2],center=true);
-    translate([0,0,BRIDGE_SY*3/2]) cube([BIG,BRIDGE_SX,BRIDGE_SY],center=true);
+    translate([0,0,BRIDGE_SY/2+RACK_T/2]) cube([BRIDGE_SX,BRIDGE_SX+BRIDGE_SY*2,BRIDGE_SY+RACK_T],center=true);
+    translate([0,0,BRIDGE_SY/2+RACK_T]) cube([BIG,BRIDGE_SX,BRIDGE_SY],center=true);
   }
 }
 
@@ -433,7 +433,7 @@ module centerPleat() {
   }
 }
 
-union() { // Cutting rig - like, uh, wrap cloth around it and cut all sheets at once
+*union() { // Cutting rig - like, uh, wrap cloth around it and cut all sheets at once
   BRACE_SZ = 20;
   BRACE_T = 5; //TODO We *might*, be able to reduce this, but these are all kinda load bearing....
   BRIDGE_SX = 20;
