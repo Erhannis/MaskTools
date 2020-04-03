@@ -186,7 +186,7 @@ module centerPleat() {
   }
 }
 
-*union() { // Pleat rack
+union() { // Pleat rack
   RACK_SZ = 20;
   RACK_T = 1.5;
   HOOK_L = PLEAT_SY; //TODO Correct?
@@ -227,7 +227,7 @@ module centerPleat() {
   HINGE_B_L = 40;
   
   IDLE_SLOT_ANGLE = 45;
-  IDLE_SLOT_T = (BRIDGE_SY+2*RACK_T)*1.2;
+  IDLE_SLOT_T = (BRIDGE_SY+RACK_T)*1.2;
   IDLE_SLOT_DOWNSET = 5;
   IDLE_SLOT_DEPTH = BRIDGE_SX*0.7;
   
@@ -382,7 +382,7 @@ module centerPleat() {
   }
 }
 
-union() { // Ruler spacer (corner type)
+*union() { // Ruler spacer (corner type)
   /*
   Attach two of these to the end of a straightedge,
   such that the outlined corners hug the corners of the straightedge.
