@@ -344,7 +344,7 @@ union() { // Pleat rack
           channel(from=[-RACK_SZ-HINGE_T/2-HINGE_T-HINGE_SLOP/2,-BRIDGE_SY/2],to=[-RACK_SZ-HINGE_T/2-HINGE_T-HINGE_SLOP/2,-BRIDGE_SY/2+BRIDGE_SX],d=HINGE_T,cap="none");
         }
         // Catch nub
-        translate([-RACK_SZ-HINGE_T/2-HINGE_T-HINGE_SLOP/2,-BRIDGE_SY/2+BRIDGE_SX + HINGE_T*3/2,HINGE_A_L+BRIDGE_SX]) mirror([0,0,1]) rotate([180,0,0]) linear_extrude(height=HINGE_T*3/2) triangle(height=3*HINGE_T);
+        translate([-RACK_SZ-HINGE_T/2-HINGE_T-HINGE_SLOP/2,-BRIDGE_SY/2+BRIDGE_SX,HINGE_A_L+BRIDGE_SX]) mirror([0,0,1]) rotate([180,0,0]) linear_extrude(height=HINGE_T*3/2) triangle(height=1.5*HINGE_T);
       }
     }
     for (dy=[0,0.5,1]*BRIDGE_SX) { // Center marking
