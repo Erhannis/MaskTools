@@ -15,15 +15,17 @@ Printing:
     the part is stronger with crisscrossing infill.
     You may have to mess with Cura's "infill line directions".
       Infill Line Directions = [0,90,180,270]
-* I had trouble printing infill at 0.4mm layer height with a 0.4mm nozzle - Cura does some
-    chicanery with the infill widths that overtaxes the printer, I think.
-* You should probably take a 
+* I had trouble printing infill at 0.4mm layer height with a 0.4mm nozzle
 * Here's how I printed things:
+  * Nozzle 0.4mm
+  * PLA
   * -0.08 Horizontal Expansion
   * -0.24 Initial Layer Horizontal Expansion (to help reduce bulging at base)
+  * Infill: zig zag
+  * Infill line width: 0.8
   * No top or bottom faces (Top/Bottom Thickness = 0)
   * 3 shells (Wall Thickness)
-  * Same outer wall speed as inner wall speed (Outer Wall Speed = 30.0mm/s)
+  * (Maybe, maybe not) Same outer wall speed as inner wall speed (Outer Wall Speed = 30.0mm/s)
     * Note that you have to deburr the joining spots thoroughly, in this case
         Basically take all the corners off the joiner peg
   * Pleat rack:
@@ -37,7 +39,23 @@ Printing:
     * Infill Line Directions = [0,90,180,270]
     * 0.2mm layer height
   * Maybe some stuff I forgot, sorry
-  
+
+* Stuff to consider:
+  * You will probably need to deburr the corner edges of the buildplate-facing
+      surface of any joiners - inside sockets, bottom corner edges of pegs.
+  * If you're having trouble gettings a peg in a socket, grab the peg stick
+      as close above the peg as possible (probably immediately above the
+      stopper) with pliers, place the socket on an e.g. table, brace your
+      pliers hand on the table, grip tightly with the pilers, and tap the
+      pliers down with something heavy and hard, like a large hammer.  (Not
+      TOO hard, mind you - they'll snap if you hit them really hard, or bend
+      them in the wrong direction, though these things are quite sturdy in the
+      direction of their length.)
+  * When using the pleat rack, you can move the cloth even while clamped -
+      you may have to kinda shimmy the rack open and closed a bit while pulling
+      gently on the cloth.
+
+
 Current list of recommended parts:
   Ruler spacer, 9 inch (pick a type) x2
   Cutting rig
