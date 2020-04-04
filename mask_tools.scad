@@ -217,12 +217,13 @@ union() { // Pleat rack
   RACK_SZ = 20;
   RACK_T = 1.5;
   HOOK_L = PLEAT_SY; //TODO Correct?
-  HOOK_INTERVAL_ADJUSTMENT = 0;
+  HOOK_INTERVAL_ADJUSTMENT = -10;
   HOOK_INTERVAL = 2.5*HOOK_L+HOOK_INTERVAL_ADJUSTMENT;
   
   CLOTH_SPACE = 2;
   HOOK_GAP = RACK_T + CLOTH_SPACE;
-  HOOK_OUT = HOOK_GAP + RACK_T;
+  HOOK_OUT_NEAR = HOOK_GAP + RACK_T;
+  HOOK_OUT_FAR = HOOK_OUT_NEAR + HOOK_GAP;
   
   *translate([-80,7,0]) union() { // Hook test
     linear_extrude(height=RACK_SZ) {
@@ -242,7 +243,7 @@ union() { // Pleat rack
   
   BRIDGE_LENGTH = 7*INCH;
   
-  PIER_A_SX = HOOK_L+PIER_BRIDGE_SX+RACK_T;
+  PIER_A_SX = HOOK_L+PIER_BRIDGE_SX+RACK_T -HOOK_INTERVAL_ADJUSTMENT/2;
   PIER_B_SX = PIER_A_SX-HOOK_L+RACK_T+CLOTH_SPACE/2;
   
   HANDLE_A_SX = 44+(SY-6*INCH)/2-HOOK_INTERVAL_ADJUSTMENT/2;
@@ -261,17 +262,19 @@ union() { // Pleat rack
   CENTER_MARKING_SIZE = 1;
   
   HOLDING_TAB_SIZE = 20;
-  
-  translate([0,51,0]) ctranslate([0,10,0])
+
+HOOK_OUT = HOOK_OUT_FAR;  
+  translate([0,51,0]) ctranslate([0,12,0])
   difference() { // Rack A - print 2
     union() {
       linear_extrude(height=RACK_SZ) {
         for (ps = [
-            [[0,-HOOK_OUT],[-PIER_A_SX,-HOOK_OUT]],
-            [[-PIER_A_SX+HOOK_L,-HOOK_OUT],[-PIER_A_SX+HOOK_L,0]],
+            [[0,-HOOK_OUT_FAR],[-PIER_A_SX+HOOK_L,-HOOK_OUT_FAR]],
+            [[-PIER_A_SX+HOOK_L,-HOOK_OUT_NEAR],[-PIER_A_SX,-HOOK_OUT_FAR]],
+            [[-PIER_A_SX+HOOK_L,-HOOK_OUT_NEAR],[-PIER_A_SX+HOOK_L,0]],
             [[-PIER_A_SX+HOOK_L,0],[-PIER_A_SX-HOOK_INTERVAL-HANDLE_A_SX,0]],
-            [[-PIER_A_SX+HOOK_L-HOOK_INTERVAL,0],[-PIER_A_SX+HOOK_L-HOOK_INTERVAL,-HOOK_OUT]],
-            [[-PIER_A_SX+HOOK_L-HOOK_INTERVAL,-HOOK_OUT],[-PIER_A_SX-HOOK_INTERVAL,-HOOK_OUT]],
+            [[-PIER_A_SX+HOOK_L-HOOK_INTERVAL,0],[-PIER_A_SX+HOOK_L-HOOK_INTERVAL,-HOOK_OUT_NEAR]],
+            [[-PIER_A_SX+HOOK_L-HOOK_INTERVAL,-HOOK_OUT_NEAR],[-PIER_A_SX-HOOK_INTERVAL,-HOOK_OUT_FAR]],
         
             // Base bridge
             [[-PIER_A_SX-HOOK_INTERVAL-HANDLE_A_SX,0],[-PIER_A_SX-HOOK_INTERVAL-HANDLE_A_SX,BRIDGE_SY+RACK_T]],
@@ -283,7 +286,7 @@ union() { // Pleat rack
             [[-PIER_A_SX+HOOK_L,-HOOK_OUT+BRIDGE_SY+RACK_T],[-PIER_A_SX+HOOK_L+PIER_BRIDGE_SX+RACK_T,-HOOK_OUT+BRIDGE_SY+RACK_T]],
             [[-PIER_A_SX+HOOK_L+PIER_BRIDGE_SX+RACK_T,-HOOK_OUT+BRIDGE_SY+RACK_T],[-PIER_A_SX+HOOK_L+PIER_BRIDGE_SX+RACK_T,-HOOK_OUT]],
           ]) {
-          channel(from=ps[0],to=ps[1],d=RACK_T,cap="square");
+          channel(from=ps[0],to=ps[1],d=RACK_T,cap="circle");
         }
       }
     }
@@ -292,7 +295,7 @@ union() { // Pleat rack
     }
   }
   
-  translate([0,27,0]) ctranslate([0,10,0])
+  translate([0,27,0]) ctranslate([0,12,0])
   difference() { // Rack B - print 2
       union() {
       linear_extrude(height=RACK_SZ) {
@@ -301,12 +304,12 @@ union() { // Pleat rack
             [[0,0],[-PIER_B_SX-HOOK_INTERVAL-HANDLE_B_SX,0]],
 
             // Hook
-            [[-PIER_B_SX-HOOK_L,0],[-PIER_B_SX-HOOK_L,HOOK_OUT]],
-            [[-PIER_B_SX-HOOK_L,HOOK_OUT],[-PIER_B_SX,HOOK_OUT]],
+            [[-PIER_B_SX-HOOK_L,0],[-PIER_B_SX-HOOK_L,HOOK_OUT_NEAR]],
+            [[-PIER_B_SX-HOOK_L,HOOK_OUT_NEAR],[-PIER_B_SX,HOOK_OUT_FAR]],
 
             // Hook
-            [[-PIER_B_SX-HOOK_INTERVAL-HOOK_L,0],[-PIER_B_SX-HOOK_INTERVAL-HOOK_L,HOOK_OUT]],
-            [[-PIER_B_SX-HOOK_INTERVAL-HOOK_L,HOOK_OUT],[-PIER_B_SX-HOOK_INTERVAL,HOOK_OUT]],
+            [[-PIER_B_SX-HOOK_INTERVAL-HOOK_L,0],[-PIER_B_SX-HOOK_INTERVAL-HOOK_L,HOOK_OUT_NEAR]],
+            [[-PIER_B_SX-HOOK_INTERVAL-HOOK_L,HOOK_OUT_NEAR],[-PIER_B_SX-HOOK_INTERVAL,HOOK_OUT_FAR]],
         
             // Base bridge
             [[-PIER_B_SX-HOOK_INTERVAL-HANDLE_B_SX,0],[-PIER_B_SX-HOOK_INTERVAL-HANDLE_B_SX,BRIDGE_SY+RACK_T]],
@@ -315,7 +318,7 @@ union() { // Pleat rack
         
             [[-PIER_B_SX-HOOK_INTERVAL-HANDLE_B_SX,0],[-PIER_B_SX-HOOK_INTERVAL-HANDLE_B_SX-HOLDING_TAB_SIZE,0]],
           ]) {
-          channel(from=ps[0],to=ps[1],d=RACK_T,cap="square");
+          channel(from=ps[0],to=ps[1],d=RACK_T,cap="circle");
         }
       }
     }
