@@ -24,6 +24,8 @@ Printing:
   * No top or bottom faces (Top/Bottom Thickness = 0)
   * 3 shells (Wall Thickness)
   * Same outer wall speed as inner wall speed (Outer Wall Speed = 30.0mm/s)
+    * Note that you have to deburr the joining spots thoroughly, in this case
+        Basically take all the corners off the joiner peg
   * Pleat rack:
     * Bridges:
       * 0.2mm layer height (my printer had problems with the infill at higher heights)
@@ -225,8 +227,8 @@ union() { // Pleat rack
   PIER_A_SX = HOOK_L+PIER_BRIDGE_SX+RACK_T;
   PIER_B_SX = PIER_A_SX-HOOK_L+RACK_T+CLOTH_SPACE/2;
   
-  HANDLE_A_SX = 35+(SY-6*INCH)/2-HOOK_INTERVAL_ADJUSTMENT/2;
-  HANDLE_B_SX = 70+(SY-6*INCH)/2-HOOK_INTERVAL_ADJUSTMENT/2;
+  HANDLE_A_SX = 44+(SY-6*INCH)/2-HOOK_INTERVAL_ADJUSTMENT/2;
+  HANDLE_B_SX = 79+(SY-6*INCH)/2-HOOK_INTERVAL_ADJUSTMENT/2;
 
   HINGE_SLOP = 1;
   HINGE_T = BRIDGE_SY;
