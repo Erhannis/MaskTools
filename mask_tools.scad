@@ -8,6 +8,9 @@ of the element in question.  And/or remove the "*".)  Not super well organized, 
 Printing:
 * EVERYTHING IS PRINTED AT -0.08mm HORIZONTAL EXPANSION.  (A Cura setting.)
     If this is merely ignored, almost certainly things will not fit together.
+    Your printer may print slightly differently, though - you may want to experiment with
+    different settings and the "Test horizontal expansion" block I have at the bottom of
+    the file.  (I haven't tested that thing myself, though, be warned.)
 * For speed, print without the top or bottom layers.
   * Most of the settings listed here are for the purposes of speed.
 * If you print anything at a 45* angle, e.g. to fit on a normal bed, you should
@@ -62,7 +65,7 @@ Printing:
 
 
 Current list of recommended parts:
-  Ruler spacer, 9 inch (pick a type) x2
+  Ruler spacer, 9 inch (push type, probably) x2
   Cutting rig
   Pleat rack
 */
@@ -77,8 +80,8 @@ INCH = 25.4;
 
 //SX = 3*INCH;
 //SY = 2*INCH;
-SX = 9*INCH;
-SY = 6*INCH;
+SX = 9*INCH;  // This is how wide the mask is
+SY = 6*INCH;  // This is how tall the mask is
 STEP_SZ = 2;
 STEP_SZ_BIG = STEP_SZ*1.5;
 PLEAT_SY = 0.5*INCH;
@@ -555,5 +558,18 @@ HOOK_OUT = HOOK_OUT_FAR;
         OXm();
       }
     }
+  }
+}
+
+*union() { // Test horizontal expansion
+  // This peg
+  translate([20,0,20]) difference() {
+    translate([0,0,-10]) cube([10,10,20], center=true);
+    for (a=[0,90,180,270]) rotate([0,0,a]) rotate([45,0,0]) OZp();
+  }
+  // Should fit tightly into this socket (like, you have to tap it in with a hammer)
+  translate([0,0,5]) difference() {
+    cube([20,20,10], center=true);
+    cube([10,10,20], center=true);
   }
 }
