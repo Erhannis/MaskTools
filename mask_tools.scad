@@ -414,7 +414,7 @@ HOOK_OUT = HOOK_OUT_FAR;
 *union() { // Ruler spacer (push type)
   RULER_WIDTH = 1*INCH;
   RULER_T = TEMPLATE_SZ/2;
-  TRIANGLE_SIZE = RULER_WIDTH*2;
+  TRIANGLE_SIZE = RULER_WIDTH*sqrt(2);
   cube([SX,RULER_WIDTH, RULER_T],center=true);
   cmirror([1,0,0]) translate([-SX/2,0,0]) {
     linear_extrude(height=RULER_T, center=true) triangle(TRIANGLE_SIZE, dir=[1,0]);
