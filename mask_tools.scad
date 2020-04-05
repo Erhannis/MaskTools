@@ -21,6 +21,7 @@ Printing:
   * PLA
   * -0.08 Horizontal Expansion
   * -0.24 Initial Layer Horizontal Expansion (to help reduce bulging at base)
+    * ...Or so I thought; but I saw -0.16 when I checked my settings just now.
   * Infill: zig zag
   * Infill line width: 0.8
   * No top or bottom faces (Top/Bottom Thickness = 0)
