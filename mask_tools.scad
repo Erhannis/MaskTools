@@ -3,7 +3,7 @@ Tools to help make emergency masks out of fabric.
 Templates, forms, etc.
 
 To print different things, basically just solo different elements.  (Put a "!" in front
-of the element in question.)  Not super well organized, sorry.
+of the element in question.  And/or remove the "*".)  Not super well organized, sorry.
 
 Printing:
 * EVERYTHING IS PRINTED AT -0.08mm HORIZONTAL EXPANSION.  (A Cura setting.)
@@ -11,12 +11,12 @@ Printing:
 * For speed, print without the top or bottom layers.
   * Most of the settings listed here are for the purposes of speed.
 * If you print anything at a 45* angle, e.g. to fit on a normal bed, you should
-    make sure the infill crisscrosses the part, rather than running lengthwise and across -
-    the part is stronger with crisscrossing infill.
+    make sure the infill crisscrosses the part, rather than running lengthwise
+    and across - the part is stronger with crisscrossing infill.
     You may have to mess with Cura's "infill line directions".
       Infill Line Directions = [0,90,180,270]
 * I had trouble printing infill at 0.4mm layer height with a 0.4mm nozzle
-* Here's how I printed things:
+* Here's how I often printed things:
   * Nozzle 0.4mm
   * PLA
   * -0.08 Horizontal Expansion
@@ -25,7 +25,7 @@ Printing:
   * Infill line width: 0.8
   * No top or bottom faces (Top/Bottom Thickness = 0)
   * 3 shells (Wall Thickness)
-  * (Maybe, maybe not) Same outer wall speed as inner wall speed (Outer Wall Speed = 30.0mm/s)
+  * (Usually not worth the effort) Same outer wall speed as inner wall speed (Outer Wall Speed = 30.0mm/s)
     * Note that you have to deburr the joining spots thoroughly, in this case
         Basically take all the corners off the joiner peg
   * Pleat rack:
@@ -51,6 +51,10 @@ Printing:
       TOO hard, mind you - they'll snap if you hit them really hard, or bend
       them in the wrong direction, though these things are quite sturdy in the
       direction of their length.)
+  * Or, a slightly less risky way I discovered, was to do the pliers thing, but
+      then place the socket-end in your palm and pull on the pliers with that
+      hand's fingers, like one of those springy hand exercise devices.  I'll
+      have to post a video at some point.
   * When using the pleat rack, you can move the cloth even while clamped -
       you may have to kinda shimmy the rack open and closed a bit while pulling
       gently on the cloth.
@@ -409,7 +413,7 @@ HOOK_OUT = HOOK_OUT_FAR;
 
 *union() { // Ruler spacer (push type)
   RULER_WIDTH = 1*INCH;
-  RULER_T = TEMPLATE_SZ;
+  RULER_T = TEMPLATE_SZ/2;
   TRIANGLE_SIZE = RULER_WIDTH*2;
   cube([SX,RULER_WIDTH, RULER_T],center=true);
   cmirror([1,0,0]) translate([-SX/2,0,0]) {
