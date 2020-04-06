@@ -5,6 +5,13 @@ Templates, forms, etc.
 To print different things, basically just solo different elements.  (Put a "!" in front
 of the element in question.  And/or remove the "*".)  Not super well organized, sorry.
 
+I printed with a 0.4mm nozzle.
+I've added Cura profile files to the repo:
+  * pleat_racks.curaprofile to print the pleat racks
+  * structural_rectilinear.curaprofile to print the short things you can fit facing east-west and north-south
+  * structural_diagonal.curaprofile to print the long things you have to print at a 45* angle
+    * or the short things you print at a 45* angle anyway
+
 Printing:
 * EVERYTHING IS PRINTED AT -0.08mm HORIZONTAL EXPANSION.  (A Cura setting.)
     If this is merely ignored, almost certainly things will not fit together.
