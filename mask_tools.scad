@@ -2,6 +2,8 @@
 Tools to help make emergency masks out of fabric.
 Templates, forms, etc.
 
+How to use (and other stuff) : https://www.youtube.com/watch?v=6Kmpcf4xn78
+
 To print different things, basically just solo different elements.  (Put a "!" in front
 of the element in question.  And/or remove the "*".)  Not super well organized, sorry.
 
@@ -16,8 +18,7 @@ Printing:
 * EVERYTHING IS PRINTED AT -0.08mm HORIZONTAL EXPANSION.  (A Cura setting.)
     If this is merely ignored, almost certainly things will not fit together.
     Your printer may print slightly differently, though - you may want to experiment with
-    different settings and the "Test horizontal expansion" block I have at the bottom of
-    the file.  (I haven't tested that thing myself, though, be warned.)
+    different settings and the "Fit tests" block I have down below.
 * For speed, print without the top or bottom layers.
   * Most of the settings listed here are for the purposes of speed.
 * If you print anything at a 45* angle, e.g. to fit on a normal bed, you should
@@ -50,6 +51,8 @@ Printing:
     * Infill Line Directions = [0,90,180,270]
     * 0.2mm layer height
   * Maybe some stuff I forgot, sorry
+
+Assembly video: https://youtu.be/a_CLPrR-0fA
 
 * Stuff to consider:
   * You will probably need to deburr the corner edges of the buildplate-facing
@@ -419,6 +422,65 @@ union() { // Pleat rack
     translate([0,0,BRIDGE_SY/2+RACK_T/2]) cube([BRIDGE_SX,BRIDGE_SX+BRIDGE_SY*2,BRIDGE_SY+RACK_T],center=true);
     translate([0,0,BRIDGE_SY/2+RACK_T]) cube([BIG,BRIDGE_SX,BRIDGE_SY],center=true);
   }
+  
+  
+  // Fit tests
+  *union() {
+    difference() { // Sockets
+      union() {
+        DXY = [[20,0],[20,0]];
+        linear_extrude(height=RACK_SZ) {
+          for (ps = [
+              // Base bridge
+              [[-PIER_A_SX-HANDLE_A_SX-10,0],[-PIER_A_SX-HANDLE_A_SX+BRIDGE_SX+RACK_T+10,0]]+DXY,
+              [[-PIER_A_SX-HANDLE_A_SX,0],[-PIER_A_SX-HANDLE_A_SX,-BRIDGE_SY-RACK_T]]+DXY,
+              [[-PIER_A_SX-HANDLE_A_SX,-BRIDGE_SY-RACK_T],[-PIER_A_SX-HANDLE_A_SX+BRIDGE_SX+RACK_T,-BRIDGE_SY-RACK_T]]+DXY,
+              [[-PIER_A_SX-HANDLE_A_SX+BRIDGE_SX+RACK_T,-BRIDGE_SY-RACK_T],[-PIER_A_SX-HANDLE_A_SX+BRIDGE_SX+RACK_T,0]]+DXY,
+          
+              // Pier bridge
+              [[-PIER_A_SX+HOOK_L-10,-HOOK_OUT],[-PIER_A_SX+HOOK_L+PIER_BRIDGE_SX+RACK_T+10,-HOOK_OUT]],
+              [[-PIER_A_SX+HOOK_L,-HOOK_OUT],[-PIER_A_SX+HOOK_L,-HOOK_OUT+BRIDGE_SY+RACK_T]],
+              [[-PIER_A_SX+HOOK_L,-HOOK_OUT+BRIDGE_SY+RACK_T],[-PIER_A_SX+HOOK_L+PIER_BRIDGE_SX+RACK_T,-HOOK_OUT+BRIDGE_SY+RACK_T]],
+              [[-PIER_A_SX+HOOK_L+PIER_BRIDGE_SX+RACK_T,-HOOK_OUT+BRIDGE_SY+RACK_T],[-PIER_A_SX+HOOK_L+PIER_BRIDGE_SX+RACK_T,-HOOK_OUT]],
+            ]) {
+            channel(from=ps[0],to=ps[1],d=RACK_T,cap="circle");
+          }
+        }
+      }
+    }
+    
+    union() { // Pegs
+      translate([0,-20,0])
+      translate([0,0,BRIDGE_SY/2]) rotate([90,0,0]) difference() { // Big bridge
+        union() {
+          linear_extrude(height=BRIDGE_SX) { // Bridge
+            channel(from=[-BRIDGE_SY*3/2,0],to=[-BRIDGE_LENGTH+BRIDGE_SY*3/2,0],d=BRIDGE_SY,cap="sharp");
+          }
+          translate([0,0,-RACK_T]) linear_extrude(height=BRIDGE_SX+RACK_T*2) { // Stopper
+            STOPPER_T = BRIDGE_SY;
+            channel(from=[-RACK_SZ-STOPPER_T/2,-BRIDGE_SY/2],to=[-RACK_SZ-STOPPER_T/2,BRIDGE_SY/2+RACK_T],d=STOPPER_T,cap="none");
+            channel(from=[-BRIDGE_LENGTH+RACK_SZ+STOPPER_T/2,-BRIDGE_SY/2],to=[-BRIDGE_LENGTH+RACK_SZ+STOPPER_T/2,BRIDGE_SY/2+RACK_T],d=STOPPER_T,cap="none");
+          }
+        }
+        OXm([-30,0,0]);
+      }
+
+      translate([0,-50,0])
+      translate([0,0,BRIDGE_SY/2]) rotate([90,0,0]) difference() { // Pier bridge
+        union() {
+          linear_extrude(height=PIER_BRIDGE_SX) { // Bridge
+            channel(from=[-BRIDGE_SY*3/2,0],to=[-BRIDGE_LENGTH+BRIDGE_SY*3/2,0],d=BRIDGE_SY,cap="sharp");
+          }
+          translate([0,0,-RACK_T]) linear_extrude(height=PIER_BRIDGE_SX+RACK_T*2) { // Stopper
+            STOPPER_T = BRIDGE_SY;
+            channel(from=[-RACK_SZ-STOPPER_T/2,-BRIDGE_SY/2],to=[-RACK_SZ-STOPPER_T/2,BRIDGE_SY/2+RACK_T],d=STOPPER_T,cap="none");
+            channel(from=[-BRIDGE_LENGTH+RACK_SZ+STOPPER_T/2,-BRIDGE_SY/2],to=[-BRIDGE_LENGTH+RACK_SZ+STOPPER_T/2,BRIDGE_SY/2+RACK_T],d=STOPPER_T,cap="none");
+          }
+        }
+        OXm([-30,0,0]);
+      }
+    }
+  }
 }
 
 *union() { // Ruler spacer (push type)
@@ -564,18 +626,5 @@ union() { // Pleat rack
         OXm();
       }
     }
-  }
-}
-
-!union() { // Test horizontal expansion
-  // This peg
-  translate([20,0,20]) difference() {
-    translate([0,0,-10]) cube([10,10,20], center=true);
-    for (a=[0,90,180,270]) rotate([0,0,a]) rotate([45,0,0]) OZp();
-  }
-  // Should fit tightly into this socket (like, you have to tap it in with a hammer)
-  translate([0,0,5]) difference() {
-    cube([20,20,10], center=true);
-    cube([10,10,20], center=true);
   }
 }
