@@ -232,7 +232,7 @@ union() { // Pleat rack
   RACK_SZ = 20;
   RACK_T = 1.5;
   HOOK_L = PLEAT_SY;
-  HOOK_COUNT = 2;
+  HOOK_COUNT = 3;
   HOOK_INTERVAL_ADJUSTMENT = -10;
   HOOK_AREA = 2.5*HOOK_L+HOOK_INTERVAL_ADJUSTMENT;
   HOOK_INTERVAL = 2.5*HOOK_L+HOOK_INTERVAL_ADJUSTMENT;
@@ -268,9 +268,9 @@ union() { // Pleat rack
   
   HOLDING_TAB_SIZE = 20;
 
-HOOK_OUT = HOOK_OUT_FAR;  
+  HOOK_OUT = HOOK_OUT_FAR;  
   translate([0,51,0]) ctranslate([0,12,0])
-  !difference() { // Rack A - print 2
+  difference() { // Rack A - print 2
     union() {
       linear_extrude(height=RACK_SZ) {
         for (ps = [
@@ -291,11 +291,13 @@ HOOK_OUT = HOOK_OUT_FAR;
           channel(from=ps[0],to=ps[1],d=RACK_T,cap="circle");
         }
         // Hooks
+        REAL_L = 15;
+        INTERVAL_F = 0.8;
         for (i = [0:HOOK_COUNT-1]) {
           for (ps = [
               // Hook
-              [[-PIER_A_SX+HOOK_L-(HOOK_INTERVAL/)*i,-HOOK_OUT_NEAR],[-PIER_A_SX+HOOK_L-HOOK_INTERVAL*i,0]],
-              [[-PIER_A_SX+HOOK_L-HOOK_INTERVAL*i,-HOOK_OUT_NEAR],[-PIER_A_SX-HOOK_INTERVAL*i,-HOOK_OUT_FAR]],
+              [[-PIER_A_SX+HOOK_L-HOOK_INTERVAL*INTERVAL_F*i,-HOOK_OUT_NEAR],[-PIER_A_SX+HOOK_L-HOOK_INTERVAL*INTERVAL_F*i,0]],
+              [[-PIER_A_SX+HOOK_L-HOOK_INTERVAL*INTERVAL_F*i,-HOOK_OUT_NEAR],[-PIER_A_SX+HOOK_L-REAL_L-HOOK_INTERVAL*INTERVAL_F*i,-HOOK_OUT_FAR]],
             ]) {
             channel(from=ps[0],to=ps[1],d=RACK_T,cap="circle");
           }
@@ -565,7 +567,7 @@ HOOK_OUT = HOOK_OUT_FAR;
   }
 }
 
-*union() { // Test horizontal expansion
+!union() { // Test horizontal expansion
   // This peg
   translate([20,0,20]) difference() {
     translate([0,0,-10]) cube([10,10,20], center=true);
