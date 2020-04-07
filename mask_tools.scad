@@ -235,9 +235,7 @@ union() { // Pleat rack
   RACK_SZ = 20;
   RACK_T = 1.5;
   HOOK_L = PLEAT_SY;
-  HOOK_COUNT = 3;
   HOOK_INTERVAL_ADJUSTMENT = -10;
-  HOOK_AREA = 2.5*HOOK_L+HOOK_INTERVAL_ADJUSTMENT;
   HOOK_INTERVAL = 2.5*HOOK_L+HOOK_INTERVAL_ADJUSTMENT;
   
   CLOTH_SPACE = 2;
@@ -271,14 +269,18 @@ union() { // Pleat rack
   
   HOLDING_TAB_SIZE = 20;
 
-  HOOK_OUT = HOOK_OUT_FAR;  
+HOOK_OUT = HOOK_OUT_FAR;  
   translate([0,51,0]) ctranslate([0,12,0])
   difference() { // Rack A - print 2
     union() {
       linear_extrude(height=RACK_SZ) {
         for (ps = [
             [[0,-HOOK_OUT_FAR],[-PIER_A_SX+HOOK_L,-HOOK_OUT_FAR]],
+            [[-PIER_A_SX+HOOK_L,-HOOK_OUT_NEAR],[-PIER_A_SX,-HOOK_OUT_FAR]],
+            [[-PIER_A_SX+HOOK_L,-HOOK_OUT_NEAR],[-PIER_A_SX+HOOK_L,0]],
             [[-PIER_A_SX+HOOK_L,0],[-PIER_A_SX-HOOK_INTERVAL-HANDLE_A_SX,0]],
+            [[-PIER_A_SX+HOOK_L-HOOK_INTERVAL,0],[-PIER_A_SX+HOOK_L-HOOK_INTERVAL,-HOOK_OUT_NEAR]],
+            [[-PIER_A_SX+HOOK_L-HOOK_INTERVAL,-HOOK_OUT_NEAR],[-PIER_A_SX-HOOK_INTERVAL,-HOOK_OUT_FAR]],
         
             // Base bridge
             [[-PIER_A_SX-HOOK_INTERVAL-HANDLE_A_SX,0],[-PIER_A_SX-HOOK_INTERVAL-HANDLE_A_SX,-BRIDGE_SY-RACK_T]],
@@ -286,24 +288,11 @@ union() { // Pleat rack
             [[-PIER_A_SX-HOOK_INTERVAL-HANDLE_A_SX+BRIDGE_SX+RACK_T,-BRIDGE_SY-RACK_T],[-PIER_A_SX-HOOK_INTERVAL-HANDLE_A_SX+BRIDGE_SX+RACK_T,0]],
         
             // Pier bridge
-            [[-PIER_A_SX+HOOK_L,0],[-PIER_A_SX+HOOK_L,-HOOK_OUT]],
             [[-PIER_A_SX+HOOK_L,-HOOK_OUT],[-PIER_A_SX+HOOK_L,-HOOK_OUT+BRIDGE_SY+RACK_T]],
             [[-PIER_A_SX+HOOK_L,-HOOK_OUT+BRIDGE_SY+RACK_T],[-PIER_A_SX+HOOK_L+PIER_BRIDGE_SX+RACK_T,-HOOK_OUT+BRIDGE_SY+RACK_T]],
             [[-PIER_A_SX+HOOK_L+PIER_BRIDGE_SX+RACK_T,-HOOK_OUT+BRIDGE_SY+RACK_T],[-PIER_A_SX+HOOK_L+PIER_BRIDGE_SX+RACK_T,-HOOK_OUT]],
           ]) {
           channel(from=ps[0],to=ps[1],d=RACK_T,cap="circle");
-        }
-        // Hooks
-        REAL_L = 15;
-        INTERVAL_F = 0.8;
-        for (i = [0:HOOK_COUNT-1]) {
-          for (ps = [
-              // Hook
-              [[-PIER_A_SX+HOOK_L-HOOK_INTERVAL*INTERVAL_F*i,-HOOK_OUT_NEAR],[-PIER_A_SX+HOOK_L-HOOK_INTERVAL*INTERVAL_F*i,0]],
-              [[-PIER_A_SX+HOOK_L-HOOK_INTERVAL*INTERVAL_F*i,-HOOK_OUT_NEAR],[-PIER_A_SX+HOOK_L-REAL_L-HOOK_INTERVAL*INTERVAL_F*i,-HOOK_OUT_FAR]],
-            ]) {
-            channel(from=ps[0],to=ps[1],d=RACK_T,cap="circle");
-          }
         }
       }
     }
