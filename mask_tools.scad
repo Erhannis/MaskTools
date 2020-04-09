@@ -7,14 +7,24 @@ How to use (and other stuff) : https://www.youtube.com/watch?v=6Kmpcf4xn78
 To print different things, basically just solo different elements.  (Put a "!" in front
 of the element in question.  And/or remove the "*".)  Not super well organized, sorry.
 
+Printing:
 I printed with a 0.4mm nozzle.
 I've added Cura profile files to the repo:
   * pleat_racks.curaprofile to print the pleat racks
   * structural_rectilinear.curaprofile to print the short things you can fit facing east-west and north-south
   * structural_diagonal.curaprofile to print the long things you have to print at a 45* angle
     * or the short things you print at a 45* angle anyway
+  * fast.curaprofile - this one is kinda all-in-one.  You can print an entire set of pleat racks/bridges
+      with this - but I recommend that you turn down the temperature to 200 after the infill slabs are done,
+      or you're gonna get a mess of stringing in inconvenient places.  You can do this manually on your printer
+      at the correct time, or you can use
+      Cura > Extensions > Post Processing > Modify GCode > Add A Script > Change At Z
+      with height of 4 (approx), and Change Extruder 1 Temp to 200. 
 
-Printing:
+If you use one of these profiles (as appropriate), you should be good.  However, here are most (all?)
+of the settings that went into them:
+
+Settings:
 * EVERYTHING IS PRINTED AT -0.08mm HORIZONTAL EXPANSION.  (A Cura setting.)
     If this is merely ignored, almost certainly things will not fit together.
     Your printer may print slightly differently, though - you may want to experiment with
