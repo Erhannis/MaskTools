@@ -289,7 +289,7 @@ module centerPleat() {
   HOLDING_TAB_SIZE = 20;
 
   module Hook() { // Hook - print many
-    difference() {
+    translate([0,RACK_T,0]) difference() {
       union() {
         translate([0,0,-RACK_T]) linear_extrude(height=RACK_SZ+RACK_T+TOOTH_R) {
           for (ps = [
@@ -356,8 +356,8 @@ module centerPleat() {
           }
         }
       }
-      for (dx=[0:CLICK_COUNT-1]) ctranslate([0,0,RACK_SZ]) { // Clicks
-        translate([-dx*CLICK_INTERVAL,0,0]) rotate([0,45,0]) cube([CENTER_MARKING_SIZE,BIG,CENTER_MARKING_SIZE],center=true);
+      for (dx=[0:(CLICK_COUNT/3)-1]) { // Clicks
+        translate([-dx*CLICK_INTERVAL*3-CLICK_INTERVAL,0,0]) cmirror([0,1,0]) Hook();
       }
     }
     
@@ -394,7 +394,7 @@ module centerPleat() {
     }
     
     translate([-120,53,0])
-      Hook(); // Hook - print many
+      !Hook(); // Hook - print many
 
     //// Bridges
 
