@@ -367,34 +367,26 @@ module centerPleat() {
         linear_extrude(height=RACK_SZ) {
           for (ps = [
               // Stem
-              [[0,0],[-PIER_B_SX-HOOK_INTERVAL-HANDLE_B_SX,0]],
+              [[0,0],[-RACK_B_SX,0]],
 
-              // Hook
-              [[-PIER_B_SX-HOOK_L,0],[-PIER_B_SX-HOOK_L,HOOK_OUT_NEAR]],
-              [[-PIER_B_SX-HOOK_L,HOOK_OUT_NEAR],[-PIER_B_SX,HOOK_OUT_FAR]],
-
-              // Hook
-              [[-PIER_B_SX-HOOK_INTERVAL-HOOK_L,0],[-PIER_B_SX-HOOK_INTERVAL-HOOK_L,HOOK_OUT_NEAR]],
-              [[-PIER_B_SX-HOOK_INTERVAL-HOOK_L,HOOK_OUT_NEAR],[-PIER_B_SX-HOOK_INTERVAL,HOOK_OUT_FAR]],
-          
               // Base bridge
-              [[-PIER_B_SX-HOOK_INTERVAL-HANDLE_B_SX,0],[-PIER_B_SX-HOOK_INTERVAL-HANDLE_B_SX,BRIDGE_SY+RACK_T]],
-              [[-PIER_B_SX-HOOK_INTERVAL-HANDLE_B_SX,BRIDGE_SY+RACK_T],[-PIER_B_SX-HOOK_INTERVAL-HANDLE_B_SX+BRIDGE_SX+RACK_T,BRIDGE_SY+RACK_T]],
-              [[-PIER_B_SX-HOOK_INTERVAL-HANDLE_B_SX+BRIDGE_SX+RACK_T,BRIDGE_SY+RACK_T],[-PIER_B_SX-HOOK_INTERVAL-HANDLE_B_SX+BRIDGE_SX+RACK_T,0]],
+              [[-RACK_B_SX,0],[-RACK_B_SX,BRIDGE_SY+RACK_T]],
+              [[-RACK_B_SX,BRIDGE_SY+RACK_T],[-RACK_B_SX+BRIDGE_SX+RACK_T,BRIDGE_SY+RACK_T]],
+              [[-RACK_B_SX+BRIDGE_SX+RACK_T,BRIDGE_SY+RACK_T],[-RACK_B_SX+BRIDGE_SX+RACK_T,0]],
           
-              [[-PIER_B_SX-HOOK_INTERVAL-HANDLE_B_SX,0],[-PIER_B_SX-HOOK_INTERVAL-HANDLE_B_SX-HOLDING_TAB_SIZE,0]],
+              [[-RACK_B_SX,0],[-RACK_B_SX-HOLDING_TAB_SIZE,0]],
             ]) {
             channel(from=ps[0],to=ps[1],d=RACK_T,cap="circle");
           }
         }
       }
-      for (dx=[0:CLICK_COUNT-1]) ctranslate([0,0,RACK_SZ]) { // Clicks
-        translate([-dx*CLICK_INTERVAL-CLICK_AB_DX,0,0]) rotate([0,45,0]) cube([CENTER_MARKING_SIZE,BIG,CENTER_MARKING_SIZE],center=true);
+      for (dx=[0:(CLICK_COUNT/3)-1]) { // Clicks
+        translate([-dx*CLICK_INTERVAL*3-CLICK_INTERVAL-CLICK_AB_DX,0,0]) cmirror([0,1,0]) Hook();
       }
     }
     
     translate([-120,53,0])
-      !Hook(); // Hook - print many
+      Hook(); // Hook - print many
 
     //// Bridges
 
