@@ -271,6 +271,7 @@ module centerPleat() {
   CLICK_COUNT = 16;
   CLICK_INTERVAL = 5;
   CLICK_AB_DX = HOOK_L+HOOK_GAP;
+  CLICK_TIE_HOLE_D = 1.5;
   TOOTH_T = RACK_T;
   TOOTH_R = 1.4;
 
@@ -296,7 +297,12 @@ module centerPleat() {
               // Hook
               [[0,0],[0,HOOK_OUT_NEAR]],
               [[0,HOOK_OUT_NEAR],[HOOK_L,HOOK_OUT_FAR]],
-          
+            ]) {
+            channel(from=ps[0],to=ps[1],d=RACK_T,cap="circle");
+          }
+        }
+        translate([0,0,-RACK_T]) linear_extrude(height=RACK_SZ+RACK_T+TOOTH_R+CLICK_TIE_HOLE_D*1.5) {
+          for (ps = [
               // Clip
               [[-CLICK_INTERVAL,0],[CLICK_INTERVAL,0]],
               [[-CLICK_INTERVAL,-RACK_T*2],[CLICK_INTERVAL,-RACK_T*2]],
@@ -325,13 +331,14 @@ module centerPleat() {
             OZm();
           }
       }
-      OZp([0,0,RACK_SZ+TOOTH_R]);
+      OZp([0,0,RACK_SZ+TOOTH_R+CLICK_TIE_HOLE_D*3]);
+      cmirror([1,0,0]) translate([-CLICK_INTERVAL/2,0,RACK_SZ+TOOTH_R]) rotate([0,45,0]) cube([CLICK_TIE_HOLE_D,RACK_T*5,CLICK_TIE_HOLE_D],center=true);
     }
   }
 
   union() { // Pleat rack
     translate([0,51,0]) ctranslate([0,12,0])
-    difference() { // Rack A - print 2
+    difference() { // Rack A - print 2 (snap off end brace)
       union() {
         linear_extrude(height=RACK_SZ) {
           for (ps = [
@@ -355,6 +362,9 @@ module centerPleat() {
             channel(from=ps[0],to=ps[1],d=RACK_T,cap="circle");
           }
         }
+        linear_extrude(height=RACK_SZ) {
+          translate([RACK_T*1.5/2,0]) channel(from=[0,-5],to=[0,5],d=RACK_T*1.5,cap="circle");
+        }
       }
       for (dx=[0:(CLICK_COUNT/3)-1]) { // Clicks
         translate([-dx*CLICK_INTERVAL*3-CLICK_INTERVAL,0,0]) cmirror([0,1,0]) Hook();
@@ -362,7 +372,7 @@ module centerPleat() {
     }
     
     translate([0,27,0]) ctranslate([0,12,0])
-    difference() { // Rack B - print 2
+    difference() { // Rack B - print 2 (snap off end brace)
         union() {
         linear_extrude(height=RACK_SZ) {
           for (ps = [
@@ -379,6 +389,9 @@ module centerPleat() {
             channel(from=ps[0],to=ps[1],d=RACK_T,cap="circle");
           }
         }
+        linear_extrude(height=RACK_SZ) {
+          translate([RACK_T*1.5/2,0]) channel(from=[0,-5],to=[0,5],d=RACK_T*1.5,cap="circle");
+        }
       }
       for (dx=[0:(CLICK_COUNT/3)-1]) { // Clicks
         translate([-dx*CLICK_INTERVAL*3-CLICK_INTERVAL-CLICK_AB_DX,0,0]) cmirror([0,1,0]) Hook();
@@ -386,7 +399,7 @@ module centerPleat() {
     }
     
     translate([-120,53,0])
-      Hook(); // Hook - print many
+      !Hook(); // Hook - print many
 
     //// Bridges
 
