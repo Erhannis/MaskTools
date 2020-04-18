@@ -94,6 +94,7 @@ use <deps.link/erhannisScad/misc.scad>
 use <deps.link/scadFluidics/common.scad>
 
 $fn=60;
+EPS = 1e-100;
 BIG = 1000;
 
 INCH = 25.4;
@@ -272,8 +273,11 @@ module centerPleat() {
   CLICK_INTERVAL = 5;
   CLICK_AB_DX = HOOK_L+HOOK_GAP;
   CLICK_TIE_HOLE_D = 1.5;
-  TOOTH_T = RACK_T;
+  TOOTH_T = RACK_T*1.5;
+  TOOTH_T_CUT = TOOTH_T*1.5;
   TOOTH_R = 1.4;
+  TOOTH_L = 1;
+  TOOTH_L_CUT = TOOTH_L*1.5;
 
   HINGE_SLOP = 1;
   HINGE_T = BRIDGE_SY;
@@ -289,55 +293,82 @@ module centerPleat() {
   
   HOLDING_TAB_SIZE = 20;
 
-  module Hook() { // Hook - print many
+  module Hook(tooth_l = TOOTH_L, tooth_t = TOOTH_T, isBridge=false) { // Hook - print many
     translate([0,RACK_T,0]) difference() {
       union() {
+        //TODO The socket sticks off the edge, where it shouldn't
         translate([0,0,-RACK_T]) linear_extrude(height=RACK_SZ+RACK_T+TOOTH_R) {
-          for (ps = [
-              // Hook
-              [[0,0],[0,HOOK_OUT_NEAR]],
-              [[0,HOOK_OUT_NEAR],[HOOK_L,HOOK_OUT_FAR]],
-            ]) {
-            channel(from=ps[0],to=ps[1],d=RACK_T,cap="circle");
+          if (isBridge) {
+            dp = [PIER_BRIDGE_SX/2+RACK_T/2,-RACK_T*2];
+            for (ps = [
+                // Pier bridge
+                [[0,0],[0,-BRIDGE_SY-RACK_T]],
+                [[-PIER_BRIDGE_SX-RACK_T,-BRIDGE_SY-RACK_T],[0,-BRIDGE_SY-RACK_T]],
+                [[-PIER_BRIDGE_SX-RACK_T,-BRIDGE_SY-RACK_T],[0-PIER_BRIDGE_SX-RACK_T,0]],
+                [[-PIER_BRIDGE_SX-RACK_T,0],[0,0]],
+              ]) {
+              channel(from=ps[0]+dp,to=ps[1]+dp,d=RACK_T,cap="circle");
+            }
+            for (ps = [
+                // Cloth clamp
+                [[0,0],[0,HOOK_OUT_FAR+2.5]],
+                [[0,HOOK_OUT_FAR+2.5],[-0.5*INCH+4.15,HOOK_OUT_FAR+2.5]],
+              ]) {
+              channel(from=ps[0],to=ps[1],d=RACK_T,cap="circle");
+            }
+         } else {
+            for (ps = [
+                // Hook
+                [[0,0],[0,HOOK_OUT_NEAR]],
+                [[0,HOOK_OUT_NEAR],[HOOK_L,HOOK_OUT_FAR]],
+              ]) {
+              channel(from=ps[0],to=ps[1],d=RACK_T,cap="circle");
+            }
           }
         }
+        dx = (tooth_t-RACK_T)/2;
         translate([0,0,-RACK_T]) linear_extrude(height=RACK_SZ+RACK_T+TOOTH_R+CLICK_TIE_HOLE_D*1.5) {
           for (ps = [
               // Clip
-              [[-CLICK_INTERVAL,0],[CLICK_INTERVAL,0]],
-              [[-CLICK_INTERVAL,-RACK_T*2],[CLICK_INTERVAL,-RACK_T*2]],
+              [[-CLICK_INTERVAL-dx,0],[CLICK_INTERVAL+dx,0]],
+              [[-CLICK_INTERVAL-dx,-RACK_T*2],[CLICK_INTERVAL+dx,-RACK_T*2]],
             ]) {
             channel(from=ps[0],to=ps[1],d=RACK_T,cap="circle");
           }
         }
-        mirror([0,0,1]) mirror([0,1,0]) translate([-CLICK_INTERVAL-RACK_T/2,0,0]) cube([CLICK_INTERVAL*2+RACK_T,RACK_T*2,RACK_T]);
+        mirror([0,0,1]) mirror([0,1,0]) translate([-CLICK_INTERVAL-RACK_T/2-dx,0,0]) cube([CLICK_INTERVAL*2+RACK_T+dx*2,RACK_T*2,RACK_T]);
         
         // Teeth
-        //TODO Yes, this is *horrible*.  I wish OpenSCAD let you declare modules in local scope.
-        //// Far teeth
-        cmirror([1,0,0]) // Top
-          translate([-CLICK_INTERVAL,-RACK_T*1.5,RACK_SZ]) rotate([0,90,0]) difference() { linear_extrude(height=TOOTH_T,center=true) translate([0,-RACK_T/2,0]) triangle(height=TOOTH_R+RACK_T/2); translate([0,TOOTH_R,0]) cmirror([1,0,0]) rotate([0,0,-45]) cmirror([0,0,1]) rotate([0,55,0]) OZm(); }
-        cmirror([1,0,0]) translate([-CLICK_INTERVAL,-RACK_T*1.5,0])
-          difference() { // Bottom
-            rotate([0,90,0]) difference() { linear_extrude(height=TOOTH_T,center=true) translate([0,-RACK_T/2,0]) triangle(height=TOOTH_R+RACK_T/2); translate([0,TOOTH_R,0]) cmirror([1,0,0]) rotate([0,0,-45]) cmirror([0,0,1]) rotate([0,55,0]) OZm(); }
-            OZm();
+        minkowski() {
+          cylinder(d=EPS,$fn=2,h=TOOTH_L_CUT,center=true);
+          union() {
+            //TODO Yes, this is *horrible*.  I wish OpenSCAD let you declare modules in local scope.
+            //// Far teeth
+            cmirror([1,0,0]) // Top
+              translate([-CLICK_INTERVAL,-RACK_T*1.5,RACK_SZ]) rotate([0,90,0]) difference() { linear_extrude(height=tooth_t,center=true) translate([0,-RACK_T/2,0]) triangle(height=TOOTH_R+RACK_T/2); translate([0,TOOTH_R,0]) cmirror([1,0,0]) rotate([0,0,-45]) cmirror([0,0,1]) rotate([0,55,0]) OZm(); }
+            cmirror([1,0,0]) translate([-CLICK_INTERVAL,-RACK_T*1.5,0])
+              difference() { // Bottom
+                rotate([0,90,0]) difference() { linear_extrude(height=tooth_t,center=true) translate([0,-RACK_T/2,0]) triangle(height=TOOTH_R+RACK_T/2); translate([0,TOOTH_R,0]) cmirror([1,0,0]) rotate([0,0,-45]) cmirror([0,0,1]) rotate([0,55,0]) OZm(); }
+                OZm();
+              }
+            //// Near teeth
+            // Top
+            translate([0,-RACK_T*0.5,RACK_SZ]) mirror([0,1,0]) rotate([0,90,0]) difference() { linear_extrude(height=tooth_t,center=true) translate([0,-RACK_T/2,0]) triangle(height=TOOTH_R+RACK_T/2); translate([0,TOOTH_R,0]) cmirror([1,0,0]) rotate([0,0,-45]) cmirror([0,0,1]) rotate([0,55,0]) OZm(); }
+            translate([0,-RACK_T*0.5,0])
+              difference() { // Bottom
+                mirror([0,1,0]) rotate([0,90,0]) difference() { linear_extrude(height=tooth_t,center=true) translate([0,-RACK_T/2,0]) triangle(height=TOOTH_R+RACK_T/2); translate([0,TOOTH_R,0]) cmirror([1,0,0]) rotate([0,0,-45]) cmirror([0,0,1]) rotate([0,55,0]) OZm(); }
+                OZm();
+              }
           }
-        //// Near teeth
-        // Top
-        translate([0,-RACK_T*0.5,RACK_SZ]) mirror([0,1,0]) rotate([0,90,0]) difference() { linear_extrude(height=TOOTH_T,center=true) translate([0,-RACK_T/2,0]) triangle(height=TOOTH_R+RACK_T/2); translate([0,TOOTH_R,0]) cmirror([1,0,0]) rotate([0,0,-45]) cmirror([0,0,1]) rotate([0,55,0]) OZm(); }
-        translate([0,-RACK_T*0.5,0])
-          difference() { // Bottom
-            mirror([0,1,0]) rotate([0,90,0]) difference() { linear_extrude(height=TOOTH_T,center=true) translate([0,-RACK_T/2,0]) triangle(height=TOOTH_R+RACK_T/2); translate([0,TOOTH_R,0]) cmirror([1,0,0]) rotate([0,0,-45]) cmirror([0,0,1]) rotate([0,55,0]) OZm(); }
-            OZm();
-          }
+        }
       }
       OZp([0,0,RACK_SZ+TOOTH_R+CLICK_TIE_HOLE_D*3]);
-      cmirror([1,0,0]) translate([-CLICK_INTERVAL/2,0,RACK_SZ+TOOTH_R]) rotate([0,45,0]) cube([CLICK_TIE_HOLE_D,RACK_T*5,CLICK_TIE_HOLE_D],center=true);
+      cmirror([1,0,0]) translate([-CLICK_INTERVAL/2,0,RACK_SZ+TOOTH_R]) rotate([0,45,0]) cube([CLICK_TIE_HOLE_D,RACK_T*6,CLICK_TIE_HOLE_D],center=true);
     }
   }
 
   union() { // Pleat rack
-    translate([0,51,0]) ctranslate([0,12,0])
+    translate([0,57,0]) ctranslate([0,14,0])
     difference() { // Rack A - print 2 (snap off end brace)
       union() {
         linear_extrude(height=RACK_SZ) {
@@ -362,16 +393,16 @@ module centerPleat() {
             channel(from=ps[0],to=ps[1],d=RACK_T,cap="circle");
           }
         }
-        linear_extrude(height=RACK_SZ) {
-          translate([RACK_T*1.5/2,0]) channel(from=[0,-5],to=[0,5],d=RACK_T*1.5,cap="circle");
+        linear_extrude(height=RACK_SZ*0.2) {
+          translate([RACK_T*2/2,0]) channel(from=[0,-5],to=[0,5],d=RACK_T*2,cap="circle");
         }
       }
       for (dx=[0:(CLICK_COUNT/3)-1]) { // Clicks
-        translate([-dx*CLICK_INTERVAL*3-CLICK_INTERVAL,0,0]) cmirror([0,1,0]) Hook();
+        translate([-dx*CLICK_INTERVAL*3-CLICK_INTERVAL,0,0]) cmirror([0,1,0]) Hook(tooth_l=TOOTH_L_CUT,tooth_t=TOOTH_T_CUT);
       }
     }
     
-    translate([0,27,0]) ctranslate([0,12,0])
+    translate([0,30,0]) ctranslate([0,13,0])
     difference() { // Rack B - print 2 (snap off end brace)
         union() {
         linear_extrude(height=RACK_SZ) {
@@ -389,17 +420,20 @@ module centerPleat() {
             channel(from=ps[0],to=ps[1],d=RACK_T,cap="circle");
           }
         }
-        linear_extrude(height=RACK_SZ) {
+        linear_extrude(height=RACK_SZ*0.2) {
           translate([RACK_T*1.5/2,0]) channel(from=[0,-5],to=[0,5],d=RACK_T*1.5,cap="circle");
         }
       }
-      for (dx=[0:(CLICK_COUNT/3)-1]) { // Clicks
-        translate([-dx*CLICK_INTERVAL*3-CLICK_INTERVAL-CLICK_AB_DX,0,0]) cmirror([0,1,0]) Hook();
+      for (dx=[-1:(CLICK_COUNT/3)-1]) { // Clicks
+        translate([-dx*CLICK_INTERVAL*3-CLICK_INTERVAL-CLICK_AB_DX,0,0]) cmirror([0,1,0]) Hook(tooth_l=TOOTH_L_CUT,tooth_t=TOOTH_T_CUT);
       }
     }
     
     translate([-120,53,0])
-      !Hook(); // Hook - print many
+      translate([0,0,5]) Hook(isBridge=false); // Hook clip - print 8 or 12
+
+    translate([-130,75,0])
+      cmirror([0,1,0]) translate([0,10,5]) Hook(isBridge=true); // Pier bridge clip - print pair
 
     //// Bridges
 
@@ -458,14 +492,16 @@ module centerPleat() {
 
     translate([0,-75,0])
     translate([0,0,BRIDGE_SY/2]) rotate([90,0,0]) difference() { // Pier bridge
+      //dx = 0; // For normal bridge
+      dx = RACK_T; // For clip bridge
       union() {
         linear_extrude(height=PIER_BRIDGE_SX) { // Bridge
-          channel(from=[-BRIDGE_SY*3/2,0],to=[-BRIDGE_LENGTH+BRIDGE_SY*3/2,0],d=BRIDGE_SY,cap="sharp");
+          channel(from=[-BRIDGE_SY*3/2-dx,0],to=[-BRIDGE_LENGTH+BRIDGE_SY*3/2+dx,0],d=BRIDGE_SY,cap="sharp");
         }
         translate([0,0,-RACK_T]) linear_extrude(height=PIER_BRIDGE_SX+RACK_T*2) { // Stopper
           STOPPER_T = BRIDGE_SY;
-          channel(from=[-RACK_SZ-STOPPER_T/2,-BRIDGE_SY/2],to=[-RACK_SZ-STOPPER_T/2,BRIDGE_SY/2+RACK_T],d=STOPPER_T,cap="none");
-          channel(from=[-BRIDGE_LENGTH+RACK_SZ+STOPPER_T/2,-BRIDGE_SY/2],to=[-BRIDGE_LENGTH+RACK_SZ+STOPPER_T/2,BRIDGE_SY/2+RACK_T],d=STOPPER_T,cap="none");
+          channel(from=[-RACK_SZ-STOPPER_T/2-dx,-BRIDGE_SY/2],to=[-RACK_SZ-STOPPER_T/2-dx,BRIDGE_SY/2+RACK_T],d=STOPPER_T,cap="none");
+          channel(from=[-BRIDGE_LENGTH+RACK_SZ+STOPPER_T/2+dx,-BRIDGE_SY/2],to=[-BRIDGE_LENGTH+RACK_SZ+STOPPER_T/2+dx,BRIDGE_SY/2+RACK_T],d=STOPPER_T,cap="none");
         }
       }
       for (dy=[0,0.5,1]*PIER_BRIDGE_SX) { // Center marking
